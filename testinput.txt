@@ -1,0 +1,10 @@
+request=smtpd_access_policy
+protocol_state=RCPT
+protocol_name=ESMTP
+client_address=10.200.10.20
+client_name=idefix.flegler.com
+reverse_client_name=idefix.flegler.com
+helo_name=idefix.flegler.com
+sender=oxmox@idefix.flegler.com
+recipient=oxmox@oxmox-nb.flegler.com
+recipient_count=0

@@ -1,0 +1,5 @@
+action=greylist, reason=new, client_name=idefix.flegler.com, client_address=10.200.10.20, sender=oxmox@idefix.flegler.com, recipient=oxmox@oxmox-nb.flegler.com
+
+action=greylist, reason=early-retry (154s missing), client_name=idefix.flegler.com, client_address=10.200.10.20, sender=oxmox@idefix.flegler.com, recipient=oxmox@oxmox-nb.flegler.com
+
+action=DEFER_IF_PERMIT Greylistedaction=DEFER_IF_PERMIT Greylisted
