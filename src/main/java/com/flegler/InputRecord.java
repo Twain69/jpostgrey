@@ -39,6 +39,7 @@ public class InputRecord {
 		this.clientAddress = builder.clientAddress;
 		this.sender = builder.sender;
 		this.recipient = builder.recipient;
+		LOG.debug("New InputRecord created: " + this.toString());
 	}
 
 	public static class InputRecordBuilder {

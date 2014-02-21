@@ -29,17 +29,17 @@ public class JPostGrey {
 	@SuppressWarnings("resource")
 	public static void main(String[] args) {
 		String clientSentence;
-		ServerSocket welcomeSocket = null;
+		ServerSocket inputSocket = null;
 		try {
-			welcomeSocket = new ServerSocket(port);
-			LOG.info("Socket started");
+			inputSocket = new ServerSocket(port);
+			LOG.info("Socket started successfully on port " + port);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 
 		while (true) {
 			try {
-				Socket connectionSocket = welcomeSocket.accept();
+				Socket connectionSocket = inputSocket.accept();
 				LOG.info("New incoming connection");
 				// TODO put every new connection to its own thread
 				BufferedReader inFromClient = new BufferedReader(
