@@ -12,10 +12,10 @@ import java.net.UnknownHostException;
 
 import org.junit.Test;
 
-import com.flegler.InputRecord.Builder;
+import com.flegler.InputRecord.InputRecordBuilder;
 
 /**
- * @author oflegler
+ * @author Oliver Flegler
  * 
  */
 public class InputRecordTest {
@@ -23,7 +23,7 @@ public class InputRecordTest {
   @Test
   public void builderTest() {
     try {
-      Builder builder = new InputRecord.Builder();
+      InputRecordBuilder builder = new InputRecord.InputRecordBuilder();
       builder.addRow("client_address=10.200.10.20").addRow("sender=oxmox@idefix.flegler.com").addRow("recipient=oxmox@oxmox-nb.flegler.com");
       InputRecord record = builder.build();
 

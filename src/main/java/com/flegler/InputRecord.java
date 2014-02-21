@@ -35,21 +35,21 @@ public class InputRecord {
 	private final String sender; // sender=oxmox@idefix.flegler.com
 	private final String recipient; // recipient=oxmox@oxmox-nb.flegler.com
 
-	private InputRecord(Builder builder) {
+	private InputRecord(InputRecordBuilder builder) {
 		this.clientAddress = builder.clientAddress;
 		this.sender = builder.sender;
 		this.recipient = builder.recipient;
 	}
 
-	public static class Builder {
+	public static class InputRecordBuilder {
 		private Inet4Address clientAddress;
 		private String sender;
 		private String recipient;
 
-		public Builder() {
+		public InputRecordBuilder() {
 		}
 
-		public Builder addRow(String input) throws UnknownHostException {
+		public InputRecordBuilder addRow(String input) throws UnknownHostException {
 			if (input != null) {
 				String[] tmp = input.split("=");
 				String key = tmp[0];

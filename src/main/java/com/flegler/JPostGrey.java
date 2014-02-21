@@ -9,7 +9,7 @@ import java.net.Socket;
 
 import org.apache.log4j.Logger;
 
-import com.flegler.InputRecord.Builder;
+import com.flegler.InputRecord.InputRecordBuilder;
 
 /**
  * Hello world!
@@ -44,7 +44,7 @@ public class JPostGrey {
 				// TODO put every new connection to its own thread
 				BufferedReader inFromClient = new BufferedReader(
 						new InputStreamReader(connectionSocket.getInputStream()));
-				Builder builder = new InputRecord.Builder();
+				InputRecordBuilder builder = new InputRecord.InputRecordBuilder();
 				do {
 					clientSentence = inFromClient.readLine();
 					LOG.debug("Got message '" + clientSentence + "'");
