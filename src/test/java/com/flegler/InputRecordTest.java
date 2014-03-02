@@ -13,6 +13,7 @@ import java.net.UnknownHostException;
 import org.junit.Test;
 
 import com.flegler.InputRecord.InputRecordBuilder;
+import com.flegler.exception.BuilderNotCompleteException;
 
 /**
  * @author Oliver Flegler

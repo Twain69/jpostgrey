@@ -1,5 +1,11 @@
-action=greylist, reason=new, client_name=idefix.flegler.com, client_address=10.200.10.20, sender=oxmox@idefix.flegler.com, recipient=oxmox@oxmox-nb.flegler.com
+Log: action=greylist, reason=new, client_name=idefix.flegler.com, client_address=10.200.10.20, sender=oxmox@idefix.flegler.com, recipient=oxmox@oxmox-nb.flegler.com
+Response: action=DEFER_IF_PERMIT Greylistedaction=DEFER_IF_PERMIT Greylisted
 
-action=greylist, reason=early-retry (154s missing), client_name=idefix.flegler.com, client_address=10.200.10.20, sender=oxmox@idefix.flegler.com, recipient=oxmox@oxmox-nb.flegler.com
+Log: action=greylist, reason=early-retry (294s missing), client_name=idefix.flegler.com, client_address=10.200.10.20, sender=oxmox@idefix.flegler.com, recipient=oxmox@oxmox-nb.flegler.com
+Response: action=DEFER_IF_PERMIT Greylistedaction=DEFER_IF_PERMIT Greylisted
 
-action=DEFER_IF_PERMIT Greylistedaction=DEFER_IF_PERMIT Greylisted
+Log: action=pass, reason=triplet found, delay=775, client_name=idefix.flegler.com, client_address=10.200.10.20, sender=oxmox@idefix.flegler.com, recipient=oxmox@oxmox-nb.flegler.com
+Response: action=PREPEND X-Greylist: delayed 775 seconds by postgrey-1.34 at oxmox-nb.flegler.com; Sun, 02 Mar 2014 22:19:41 CET
+
+Log: action=pass, reason=triplet found, client_name=idefix.flegler.com, client_address=10.200.10.20, sender=oxmox@idefix.flegler.com, recipient=oxmox@oxmox-nb.flegler.com
+Response: action=DUNNO

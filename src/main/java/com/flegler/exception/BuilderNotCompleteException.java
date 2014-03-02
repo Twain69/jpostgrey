@@ -1,4 +1,4 @@
-package com.flegler;
+package com.flegler.exception;
 
 public class BuilderNotCompleteException extends Exception {
 	private static final long serialVersionUID = 1L;
