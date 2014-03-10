@@ -1,4 +1,4 @@
-package com.flegler;
+package com.flegler.jpostgrey;
 
 public class OutputRecord {
 	// action=DEFER_IF_PERMIT Greylistedaction=DEFER_IF_PERMIT Greylisted

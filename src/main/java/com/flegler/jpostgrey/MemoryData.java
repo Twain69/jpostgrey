@@ -1,4 +1,6 @@
-package com.flegler;
+package com.flegler.jpostgrey;
+
+import interfaces.DataFetcher;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -9,7 +11,7 @@ import org.apache.log4j.Logger;
 
 import com.flegler.exception.InputRecordNotFoundException;
 
-public class MemoryData {
+public class MemoryData implements DataFetcher {
 
 	private final List<Record> recordList;
 	private static MemoryData instance;
@@ -41,6 +43,7 @@ public class MemoryData {
 	 * @return
 	 * @throws InputRecordNotFoundException
 	 */
+	@Override
 	public int getDuration(InputRecord inputRecord)
 			throws InputRecordNotFoundException {
 		if (recordList != null && !recordList.isEmpty()) {

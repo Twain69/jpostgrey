@@ -1,4 +1,4 @@
-package com.flegler;
+package com.flegler.jpostgrey;
 
 import java.util.Date;
 

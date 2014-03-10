@@ -1,16 +1,20 @@
-package com.flegler;
+package com.flegler.jpostgrey;
+
+import interfaces.DataFetcher;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.net.Socket;
 
 import org.apache.log4j.Logger;
 
-import com.flegler.InputRecord.InputRecordBuilder;
 import com.flegler.exception.BuilderNotCompleteException;
 import com.flegler.exception.InputRecordNotFoundException;
+import com.flegler.jpostgrey.InputRecord.InputRecordBuilder;
 
 public class InputThread extends Thread {
 
@@ -52,11 +56,10 @@ public class InputThread extends Thread {
 			} catch (BuilderNotCompleteException e) {
 				LOG.info("Not all records received ... have to reject");
 			}
-			out = new OutputStreamWriter(
-					socket.getOutputStream());
+			out = new OutputStreamWriter(socket.getOutputStream());
 			out.write(findTripletAndBuildOutputRecord(inputRecord).toString());
 		} catch (IOException e) {
-			for(StackTraceElement element: e.getStackTrace()) {
+			for (StackTraceElement element : e.getStackTrace()) {
 				LOG.error(element.toString());
 			}
 		} finally {
@@ -65,7 +68,7 @@ public class InputThread extends Thread {
 					out.flush();
 					out.close();
 				} catch (IOException e) {
-					for(StackTraceElement element: e.getStackTrace()) {
+					for (StackTraceElement element : e.getStackTrace()) {
 						LOG.error(element.toString());
 					}
 				}
@@ -76,9 +79,14 @@ public class InputThread extends Thread {
 	public OutputRecord findTripletAndBuildOutputRecord(InputRecord inputRecord) {
 		OutputRecord outputRecord = new OutputRecord(inputRecord);
 
+		Class<DataFetcher> dataClass = null;
 		try {
-			int duration = MemoryData.getInstance().getDuration(inputRecord);
-			if (duration > 10) {
+			dataClass = Settings.getInstance().getDataClass();
+			Method method = dataClass.getMethod("getInstance");
+			DataFetcher fetcher = (DataFetcher) method.invoke(null);
+			int duration = fetcher.getDuration(inputRecord);
+
+			if (duration > Settings.getInstance().getGreylistingTime()) {
 				outputRecord.setReason(OutputRecord.Reason.TRIPLET_FOUND);
 				outputRecord.setAction(OutputRecord.Action.PASS);
 			} else {
@@ -87,9 +95,15 @@ public class InputThread extends Thread {
 				outputRecord.setReason(OutputRecord.Reason.EARLY_RETRY);
 				outputRecord.setAction(OutputRecord.Action.DEFER_IF_PERMIT);
 			}
+
 		} catch (InputRecordNotFoundException e) {
 			outputRecord.setReason(OutputRecord.Reason.NEW);
 			outputRecord.setAction(OutputRecord.Action.DEFER_IF_PERMIT);
+		} catch (NoSuchMethodException | SecurityException
+				| IllegalAccessException | IllegalArgumentException
+				| InvocationTargetException e) {
+			LOG.error("Could not load data class '" + dataClass.getName() + "'");
+			e.printStackTrace();
 		}
 
 		return outputRecord;
