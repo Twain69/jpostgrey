@@ -7,7 +7,7 @@ public class OutputRecord {
 	};
 
 	public static enum Reason {
-		NEW, EARLY_RETRY, TRIPLET_FOUND
+		NEW, EARLY_RETRY, TRIPLET_FOUND, ERROR
 	};
 
 	private Action action;

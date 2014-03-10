@@ -103,7 +103,8 @@ public class InputThread extends Thread {
 				| IllegalAccessException | IllegalArgumentException
 				| InvocationTargetException e) {
 			LOG.error("Could not load data class '" + dataClass.getName() + "'");
-			e.printStackTrace();
+			outputRecord.setReason(OutputRecord.Reason.ERROR);
+			outputRecord.setAction(OutputRecord.Action.DUNNO);
 		}
 
 		return outputRecord;

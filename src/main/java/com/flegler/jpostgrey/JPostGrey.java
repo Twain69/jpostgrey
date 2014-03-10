@@ -37,9 +37,6 @@ public class JPostGrey {
 			e.printStackTrace();
 		}
 
-		// instanciate the MemoryData store
-		MemoryData.getInstance();
-
 		while (true) {
 			try {
 				Socket connectionSocket = inputSocket.accept();
