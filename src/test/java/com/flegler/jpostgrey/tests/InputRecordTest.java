@@ -2,7 +2,7 @@
  * Copyright (c) 2014 ADTECH. All rights reserved.
  * 
  **/
-package com.flegler;
+package com.flegler.jpostgrey.tests;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;

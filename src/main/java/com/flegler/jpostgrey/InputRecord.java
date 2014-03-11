@@ -102,7 +102,7 @@ public class InputRecord {
 
 	@Override
 	public String toString() {
-		return "InputRecord [clientAddress=" + clientAddress + ", sender="
+    return "InputRecord [clientAddress=" + clientAddress.getHostAddress() + ", sender="
 				+ sender + ", recipient=" + recipient + "]";
 	}
 
