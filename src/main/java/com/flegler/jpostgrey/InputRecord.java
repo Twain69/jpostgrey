@@ -5,7 +5,7 @@ import java.net.UnknownHostException;
 
 import org.apache.log4j.Logger;
 
-import com.flegler.exception.BuilderNotCompleteException;
+import com.flegler.jpostgrey.exception.BuilderNotCompleteException;
 
 public class InputRecord {
 

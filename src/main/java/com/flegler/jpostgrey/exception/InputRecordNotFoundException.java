@@ -1,4 +1,4 @@
-package com.flegler.exception;
+package com.flegler.jpostgrey.exception;
 
 public class InputRecordNotFoundException extends Exception {
 

@@ -1,7 +1,5 @@
 package com.flegler.jpostgrey;
 
-import interfaces.DataFetcher;
-
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -9,7 +7,8 @@ import java.util.concurrent.Semaphore;
 
 import org.apache.log4j.Logger;
 
-import com.flegler.exception.InputRecordNotFoundException;
+import com.flegler.jpostgrey.exception.InputRecordNotFoundException;
+import com.flegler.jpostgrey.interfaces.DataFetcher;
 
 public class MemoryData implements DataFetcher {
 

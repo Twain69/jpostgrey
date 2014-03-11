@@ -1,7 +1,5 @@
 package com.flegler.jpostgrey;
 
-import interfaces.DataFetcher;
-
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -9,6 +7,8 @@ import java.util.PropertyResourceBundle;
 import java.util.ResourceBundle;
 
 import org.apache.log4j.Logger;
+
+import com.flegler.jpostgrey.interfaces.DataFetcher;
 
 public class Settings {
 

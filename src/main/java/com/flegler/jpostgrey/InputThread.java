@@ -1,7 +1,5 @@
 package com.flegler.jpostgrey;
 
-import interfaces.DataFetcher;
-
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -12,9 +10,10 @@ import java.net.Socket;
 
 import org.apache.log4j.Logger;
 
-import com.flegler.exception.BuilderNotCompleteException;
-import com.flegler.exception.InputRecordNotFoundException;
 import com.flegler.jpostgrey.InputRecord.InputRecordBuilder;
+import com.flegler.jpostgrey.exception.BuilderNotCompleteException;
+import com.flegler.jpostgrey.exception.InputRecordNotFoundException;
+import com.flegler.jpostgrey.interfaces.DataFetcher;
 
 public class InputThread extends Thread {
 
