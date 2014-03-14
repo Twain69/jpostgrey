@@ -1,4 +1,4 @@
-package com.flegler.jpostgrey;
+package com.flegler.jpostgrey.dataFetcher;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -7,28 +7,21 @@ import java.util.concurrent.Semaphore;
 
 import org.apache.log4j.Logger;
 
+import com.flegler.jpostgrey.InputRecord;
+import com.flegler.jpostgrey.Record;
 import com.flegler.jpostgrey.exception.InputRecordNotFoundException;
 import com.flegler.jpostgrey.interfaces.DataFetcher;
 
 public class MemoryData implements DataFetcher {
 
 	private final List<Record> recordList;
-	private static MemoryData instance;
 
 	private final Semaphore writeLock = new Semaphore(1);
 
 	private static final Logger LOG = Logger.getLogger(MemoryData.class);
 
-	private MemoryData() {
+	public MemoryData() {
 		recordList = new ArrayList<>();
-	}
-
-	public static MemoryData getInstance() {
-		if (instance == null) {
-			instance = new MemoryData();
-		}
-
-		return instance;
 	}
 
 	/**

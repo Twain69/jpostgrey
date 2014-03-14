@@ -4,8 +4,6 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 import java.net.Socket;
 
 import org.apache.log4j.Logger;
@@ -78,11 +76,9 @@ public class InputThread extends Thread {
 	public OutputRecord findTripletAndBuildOutputRecord(InputRecord inputRecord) {
 		OutputRecord outputRecord = new OutputRecord(inputRecord);
 
-		Class<DataFetcher> dataClass = null;
 		try {
-			dataClass = Settings.getInstance().getDataClass();
-			Method method = dataClass.getMethod("getInstance");
-			DataFetcher fetcher = (DataFetcher) method.invoke(null);
+			DataFetcher fetcher = Settings.getInstance()
+					.getDataFetcherInstance();
 			int duration = fetcher.getDuration(inputRecord);
 
 			if (duration > Settings.getInstance().getGreylistingTime()) {
@@ -98,10 +94,8 @@ public class InputThread extends Thread {
 		} catch (InputRecordNotFoundException e) {
 			outputRecord.setReason(OutputRecord.Reason.NEW);
 			outputRecord.setAction(OutputRecord.Action.DEFER_IF_PERMIT);
-		} catch (NoSuchMethodException | SecurityException
-				| IllegalAccessException | IllegalArgumentException
-				| InvocationTargetException e) {
-			LOG.error("Could not load data class '" + dataClass.getName() + "'");
+		} catch (NullPointerException e) {
+			LOG.error("Something went really bad here! The datafetcher was missing.");
 			outputRecord.setReason(OutputRecord.Reason.ERROR);
 			outputRecord.setAction(OutputRecord.Action.DUNNO);
 		}

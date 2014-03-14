@@ -30,11 +30,13 @@ public class JPostGrey {
 
 		ServerSocket inputSocket = null;
 		try {
-			inputSocket = new ServerSocket(Settings.getInstance().getPort());
+			inputSocket = new ServerSocket(Settings.getInstance().getPort(), 0,
+					Settings.getInstance().getBindAddress());
 			LOG.info("Socket started successfully on port "
 					+ Settings.getInstance().getPort());
 		} catch (IOException e) {
 			e.printStackTrace();
+			System.exit(1);
 		}
 
 		while (true) {
@@ -83,7 +85,6 @@ public class JPostGrey {
 			System.err.println();
 			printHelp(options);
 		}
-
 
 		Settings settings = Settings.getInstance();
 

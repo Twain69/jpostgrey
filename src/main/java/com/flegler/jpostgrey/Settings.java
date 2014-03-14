@@ -3,6 +3,10 @@ package com.flegler.jpostgrey;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
+import java.util.MissingResourceException;
 import java.util.PropertyResourceBundle;
 import java.util.ResourceBundle;
 
@@ -16,11 +20,21 @@ public class Settings {
 
 	private static Settings instance;
 	private Integer port;
+	private InetAddress bindAddress;
 	private Long configFileLastModified;
 	private File configFile;
+
 	private String dataClassName;
 	private Class<DataFetcher> dataClass;
+	private DataFetcher dataFetcherInstance;
+
 	private Integer greylistingTime;
+
+	private String dataFetcherDBType;
+	private String dataFetcherDBHost;
+	private String dataFetcherDBName;
+	private String dataFetcherDBUser;
+	private String dataFetcherDBPassword;
 
 	private Settings() {
 	}
@@ -55,23 +69,64 @@ public class Settings {
 					+ this.configFile.getName() + "'");
 		}
 
-		this.setDataClass(bundle.getString("application.greylisting.dataClass").trim());
+		// only set this at the first settings load run. this can not be changed
+		// during the running process
+		if (this.getPort() == null && this.getBindAddress() == null) {
+			try {
+				this.setPort(new Integer(bundle.getString(
+						"application.main.port").trim()));
+				setBindAddress(InetAddress.getByName(bundle
+						.getString("application.main.address")));
+
+			} catch (NumberFormatException e) {
+				String errorMessage = "Wrong input for application.main.port: '"
+						+ bundle.getString("application.main.port") + "'";
+				LOG.error(errorMessage);
+				System.err.println(errorMessage);
+				System.exit(1);
+			} catch (UnknownHostException e) {
+				String errorMessage = "Wrong input for application.main.address: '"
+						+ bundle.getString("application.main.address") + "'";
+				LOG.error(errorMessage);
+				System.err.println(errorMessage);
+				System.exit(1);
+			}
+		}
 
 		try {
-			this.setPort(new Integer(bundle.getString("application.main.port")
-					.trim()));
-		} catch (NumberFormatException e) {
-			LOG.error("Wrong input for application.main.port: '"
-					+ bundle.getString("application.main.port") + "'");
-		}
-		
-		try {
-			setGreylistingTime(new Integer(bundle.getString("application.greylisting.time")
-					.trim()));
+			setGreylistingTime(new Integer(bundle.getString(
+					"application.greylisting.time").trim()));
 		} catch (NumberFormatException e) {
 			LOG.error("Wrong input for application.greylisting.time: '"
 					+ bundle.getString("application.greylisting.time") + "'");
 		}
+
+		try {
+			this.dataFetcherDBType = bundle
+					.getString("application.datafetcher.database.type");
+			this.dataFetcherDBHost = bundle
+					.getString("application.datafetcher.database.host");
+			this.dataFetcherDBUser = bundle
+					.getString("application.datafetcher.database.user");
+			this.dataFetcherDBPassword = bundle
+					.getString("application.datafetcher.database.password");
+			this.dataFetcherDBName = bundle
+					.getString("application.datafetcher.database.name");
+		} catch (MissingResourceException e) {
+			if (bundle.getString("application.datafetcher.type").equals(
+					"com.flegler.jpostgrey.dataFetcher.DatabaseFetcher")) {
+				String errorMessage = "There is some configuration missing: "
+						+ e.getLocalizedMessage();
+				LOG.error(errorMessage);
+				System.err.println(errorMessage);
+				System.exit(1);
+			}
+		}
+
+		// this has always to be called at the very end of this method.
+		// otherwise some information could be missing
+		this.setDataClass(bundle.getString("application.datafetcher.type")
+				.trim());
 
 	}
 
@@ -80,10 +135,8 @@ public class Settings {
 	}
 
 	private void setPort(Integer port) {
-		if (getPort() == null) {
-			LOG.info("Setting port to '" + port + "'.");
-			this.port = port;
-		}
+		LOG.info("Setting port to '" + port + "'.");
+		this.port = port;
 	}
 
 	public void setConfigFile(File configFile) {
@@ -105,7 +158,15 @@ public class Settings {
 				LOG.debug("Setting data class to " + dataClassName);
 				this.dataClass = (Class<DataFetcher>) Class
 						.forName(dataClassName);
-			} catch (ClassNotFoundException e) {
+				this.dataFetcherInstance = dataClass.getConstructor()
+						.newInstance(this.dataFetcherDBType,
+								this.dataFetcherDBHost, this.dataFetcherDBName,
+								this.dataFetcherDBUser,
+								this.dataFetcherDBPassword);
+			} catch (ClassNotFoundException | InstantiationException
+					| IllegalAccessException | IllegalArgumentException
+					| InvocationTargetException | NoSuchMethodException
+					| SecurityException e) {
 				if (getDataClass() != null) {
 					LOG.error("Could not load data class. Ignoring configuration change!");
 				} else {
@@ -128,4 +189,39 @@ public class Settings {
 	public Integer getGreylistingTime() {
 		return greylistingTime;
 	}
+
+	public void setBindAddress(InetAddress bindAddress) {
+		LOG.info("Setting bindAddress to '" + bindAddress.getHostAddress()
+				+ "'.");
+		this.bindAddress = bindAddress;
+	}
+
+	public InetAddress getBindAddress() {
+		return bindAddress;
+	}
+
+	public DataFetcher getDataFetcherInstance() {
+		return dataFetcherInstance;
+	}
+
+	public String getDataFetcherDBType() {
+		return dataFetcherDBType;
+	}
+
+	public String getDataFetcherDBHost() {
+		return dataFetcherDBHost;
+	}
+
+	public String getDataFetcherDBUser() {
+		return dataFetcherDBUser;
+	}
+
+	public String getDataFetcherDBPassword() {
+		return dataFetcherDBPassword;
+	}
+
+	public String getDataFetcherDBName() {
+		return dataFetcherDBName;
+	}
+
 }
