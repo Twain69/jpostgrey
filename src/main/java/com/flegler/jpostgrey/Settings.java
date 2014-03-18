@@ -3,7 +3,9 @@ package com.flegler.jpostgrey;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.MissingResourceException;
@@ -158,16 +160,16 @@ public class Settings {
 				LOG.debug("Setting data class to " + dataClassName);
 				this.dataClass = (Class<DataFetcher>) Class
 						.forName(dataClassName);
-				this.dataFetcherInstance = dataClass.getConstructor()
-						.newInstance(this.dataFetcherDBType,
-								this.dataFetcherDBHost, this.dataFetcherDBName,
-								this.dataFetcherDBUser,
-								this.dataFetcherDBPassword);
-			} catch (ClassNotFoundException | InstantiationException
-					| IllegalAccessException | IllegalArgumentException
-					| InvocationTargetException | NoSuchMethodException
-					| SecurityException e) {
-				if (getDataClass() != null) {
+				Constructor<DataFetcher> constructor = dataClass
+						.getConstructor();
+				this.dataFetcherInstance = constructor.newInstance();
+				Method method = dataClass.getMethod("setUp", Settings.class);
+				method.invoke(this.dataFetcherInstance, Settings.getInstance());
+			} catch (ClassNotFoundException | IllegalAccessException
+					| IllegalArgumentException | InvocationTargetException
+					| NoSuchMethodException | SecurityException
+					| InstantiationException e) {
+				if (getDataFetcherInstance() != null) {
 					LOG.error("Could not load data class. Ignoring configuration change!");
 				} else {
 					System.err.println("Could not load data class "

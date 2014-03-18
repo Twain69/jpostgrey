@@ -1,5 +1,6 @@
 package com.flegler.jpostgrey.dataFetcher;
 
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -9,6 +10,7 @@ import org.apache.log4j.Logger;
 
 import com.flegler.jpostgrey.InputRecord;
 import com.flegler.jpostgrey.Record;
+import com.flegler.jpostgrey.Settings;
 import com.flegler.jpostgrey.exception.InputRecordNotFoundException;
 import com.flegler.jpostgrey.interfaces.DataFetcher;
 
@@ -18,9 +20,9 @@ public class MemoryData implements DataFetcher {
 
 	private final Semaphore writeLock = new Semaphore(1);
 
-	private static final Logger LOG = Logger.getLogger(MemoryData.class);
+	private final Logger LOG = Logger.getLogger(MemoryData.class);
 
-	public MemoryData() {
+	private MemoryData() {
 		recordList = new ArrayList<>();
 	}
 
@@ -36,7 +38,7 @@ public class MemoryData implements DataFetcher {
 	 * @throws InputRecordNotFoundException
 	 */
 	@Override
-	public int getDuration(InputRecord inputRecord)
+	public Timestamp getTimestamp(InputRecord inputRecord)
 			throws InputRecordNotFoundException {
 		if (recordList != null && !recordList.isEmpty()) {
 			int index = -1;
@@ -58,7 +60,6 @@ public class MemoryData implements DataFetcher {
 			LOG.trace("Current count of objects in MemoryData: "
 					+ recordList.size());
 
-			Date now = new Date();
 			Date firstHit = record.getFirstHit();
 
 			record.setLastHit(new Date());
@@ -66,8 +67,7 @@ public class MemoryData implements DataFetcher {
 
 			recordList.set(index, record);
 
-			return new Long((now.getTime() - firstHit.getTime()) / 1000)
-					.intValue();
+			return new Timestamp(firstHit.getTime());
 		} else {
 			addNewRecord(inputRecord);
 			throw new InputRecordNotFoundException();
@@ -89,4 +89,10 @@ public class MemoryData implements DataFetcher {
 		recordList.add(record);
 		writeLock.release();
 	}
+
+	@Override
+	public void setUp(Settings settings) {
+		// this is left intentionally, since it is not needed here
+	}
+
 }

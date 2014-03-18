@@ -5,6 +5,8 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.net.Socket;
+import java.sql.Timestamp;
+import java.util.Date;
 
 import org.apache.log4j.Logger;
 
@@ -77,9 +79,12 @@ public class InputThread extends Thread {
 		OutputRecord outputRecord = new OutputRecord(inputRecord);
 
 		try {
-			DataFetcher fetcher = Settings.getInstance()
-					.getDataFetcherInstance();
-			int duration = fetcher.getDuration(inputRecord);
+			Settings settings = Settings.getInstance();
+			DataFetcher fetcher = settings.getDataFetcherInstance();
+			Timestamp lastConnect = fetcher.getTimestamp(inputRecord);
+			int duration = new Long(
+					((new Date()).getTime() - lastConnect.getTime()) / 1000)
+					.intValue();
 
 			if (duration > Settings.getInstance().getGreylistingTime()) {
 				outputRecord.setReason(OutputRecord.Reason.TRIPLET_FOUND);
