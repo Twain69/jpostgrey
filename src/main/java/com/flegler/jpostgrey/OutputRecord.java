@@ -1,14 +1,6 @@
 package com.flegler.jpostgrey;
 
 public class OutputRecord {
-	// action=DEFER_IF_PERMIT Greylistedaction=DEFER_IF_PERMIT Greylisted
-	public static enum Action {
-		DEFER_IF_PERMIT, PASS, DUNNO, WHITELIST
-	};
-
-	public static enum Reason {
-		NEW, EARLY_RETRY, TRIPLET_FOUND, ERROR
-	};
 
 	private Action action;
 	private Reason reason;

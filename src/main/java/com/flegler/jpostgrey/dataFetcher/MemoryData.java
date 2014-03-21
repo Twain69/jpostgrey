@@ -1,6 +1,5 @@
 package com.flegler.jpostgrey.dataFetcher;
 
-import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -38,8 +37,8 @@ public class MemoryData implements DataFetcher {
 	 * @throws InputRecordNotFoundException
 	 */
 	@Override
-	public Timestamp getTimestamp(InputRecord inputRecord)
-			throws InputRecordNotFoundException {
+	public FetcherResult getResult(InputRecord inputRecord) {
+		FetcherResult result = new FetcherResult();
 		if (recordList != null && !recordList.isEmpty()) {
 			int index = -1;
 			for (int i = 0; i < recordList.size(); i++) {
@@ -51,7 +50,8 @@ public class MemoryData implements DataFetcher {
 
 			if (index == -1) {
 				addNewRecord(inputRecord);
-				throw new InputRecordNotFoundException();
+				result.setFirstConnect(0L);
+				return result;
 			}
 
 			Record record = recordList.get(index);
@@ -67,11 +67,14 @@ public class MemoryData implements DataFetcher {
 
 			recordList.set(index, record);
 
-			return new Timestamp(firstHit.getTime());
+			result.setFirstConnect(firstHit.getTime());
+			return result;
 		} else {
+			result.setFirstConnect(0L);
 			addNewRecord(inputRecord);
-			throw new InputRecordNotFoundException();
+			return result;
 		}
+
 	}
 
 	private void addNewRecord(InputRecord inputRecord) {

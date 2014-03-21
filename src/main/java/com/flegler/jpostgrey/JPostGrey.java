@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.UUID;
 
 import javax.naming.ConfigurationException;
 
@@ -42,7 +43,8 @@ public class JPostGrey {
 		while (true) {
 			try {
 				Socket connectionSocket = inputSocket.accept();
-				InputThread input = new InputThread(connectionSocket);
+				InputThread input = new InputThread(connectionSocket,
+						UUID.randomUUID());
 				input.start();
 			} catch (IOException e) {
 				for (StackTraceElement element : e.getStackTrace()) {

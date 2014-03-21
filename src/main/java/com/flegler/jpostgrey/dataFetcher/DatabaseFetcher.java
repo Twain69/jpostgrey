@@ -52,19 +52,20 @@ public class DatabaseFetcher implements DataFetcher {
 	}
 
 	@Override
-	public Timestamp getTimestamp(InputRecord inputRecord)
-			throws InputRecordNotFoundException {
+	public FetcherResult getResult(InputRecord inputRecord) {
+		FetcherResult result = new FetcherResult();
 		try {
-			if (!isInWhiteList(inputRecord)) {
-				return getGreylistedData(inputRecord);
+			if (isInWhiteList(inputRecord)) {
+				result.setWhitelisted(true);
+				return result;
 			} else {
-				return new Timestamp(0L);
+				result.setFirstConnect(getGreylistedData(inputRecord));
+				return result;
 			}
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		} catch (InputRecordNotFoundException | SQLException e) {
+			result.setFirstConnect(0L);
+			return result;
 		}
-		throw new InputRecordNotFoundException();
 	}
 
 	private Connection connect() throws SQLException {
@@ -79,20 +80,15 @@ public class DatabaseFetcher implements DataFetcher {
 	}
 
 	private boolean isInWhiteList(InputRecord inputRecord) throws SQLException {
-		// TODO implementation missing
 		PreparedStatement stmt = connection
 				.prepareStatement("SELECT pattern, comment FROM whitelist");
 		ResultSet result = stmt.executeQuery();
 		if (result != null) {
 			while (result.next()) {
-				String pattern = result.getString("pattern");
-				String comment = result.getString("comment");
+				String pattern = ".*" + result.getString("pattern") + ".*";
 
-				if (pattern.matches(".*" + inputRecord.getRecipient() + ".*")
-						|| pattern.matches(".*" + inputRecord.getSender()
-								+ ".*")) {
-					LOG.info("Whitelist found for pattern '" + pattern
-							+ "' and comment '" + comment + "'");
+				if (inputRecord.getRecipient().matches(pattern)
+						|| inputRecord.getSender().matches(pattern)) {
 					return true;
 				}
 			}
@@ -100,7 +96,7 @@ public class DatabaseFetcher implements DataFetcher {
 		return false;
 	}
 
-	private Timestamp getGreylistedData(InputRecord inputRecord)
+	private Long getGreylistedData(InputRecord inputRecord)
 			throws SQLException, InputRecordNotFoundException {
 		PreparedStatement stmt = connection
 				.prepareStatement("SELECT firstconnect FROM greylist WHERE clientaddress = ? AND sender = ? AND recipient = ?");
@@ -118,7 +114,7 @@ public class DatabaseFetcher implements DataFetcher {
 
 				updateRecordInDatabase(inputRecord);
 
-				return firstConnect;
+				return firstConnect.getTime();
 			}
 		}
 
@@ -127,7 +123,7 @@ public class DatabaseFetcher implements DataFetcher {
 			throw new InputRecordNotFoundException();
 		}
 
-		throw new InputRecordNotFoundException();
+		return 0L;
 	}
 
 	private void insertInputRecord(InputRecord inputRecord) throws SQLException {
