@@ -24,6 +24,9 @@ public class JPostGrey {
 	@SuppressWarnings("resource")
 	public static void main(String[] args) throws ConfigurationException {
 
+		Util util = new Util();
+		LOG.info("jPostgrey started. Version: " + util.getVersion());
+
 		parseArguments(args);
 
 		SettingsReloader settingsReloader = new SettingsReloader();
