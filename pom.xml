@@ -102,7 +102,7 @@
 				<configuration>
 					<copyright>2014, flegler.com</copyright>
 					<distribution></distribution>
-					<group>Services/Mail</group>
+					<group>Mail</group>
 					<icon>src/main/resources/icon.gif</icon>
 					<packager>SWWDC</packager>
 					<prefix>/usr/share</prefix>
@@ -119,6 +119,17 @@
 							<sources>
 								<source>
 									<location>target/jpostgrey.jar</location>
+								</source>
+							</sources>
+						</mapping>
+						<mapping>
+							<directory>/usr/share/jpostgrey/</directory>
+							<filemode>770</filemode>
+							<username>root</username>
+							<groupname>root</groupname>
+							<sources>
+								<source>
+									<location>src/main/resources/sh/jpostgrey</location>
 								</source>
 							</sources>
 						</mapping>
@@ -143,6 +154,19 @@
 								<source>
 									<location>src/main/resources/init.d/jpostgrey</location>
 									<destination>jpostgrey</destination>
+								</source>
+							</sources>
+						</mapping>
+						<mapping>
+							<directory>/etc/</directory>
+							<directoryIncluded>false</directoryIncluded>
+							<filemode>770</filemode>
+							<username>root</username>
+							<groupname>root</groupname>
+							<sources>
+								<source>
+									<location>data/jpostgrey.conf</location>
+									<destination>jpostgrey.conf</destination>
 								</source>
 							</sources>
 						</mapping>

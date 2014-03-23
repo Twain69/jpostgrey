@@ -38,6 +38,8 @@ public class Settings {
 	private String dataFetcherDBUser;
 	private String dataFetcherDBPassword;
 
+	private String pidFileName;
+
 	private Settings() {
 	}
 
@@ -224,6 +226,14 @@ public class Settings {
 
 	public String getDataFetcherDBName() {
 		return dataFetcherDBName;
+	}
+
+	public void setPidFileName(String pidFileName) {
+		this.pidFileName = pidFileName;
+	}
+
+	public String getPidFileName() {
+		return pidFileName;
 	}
 
 }
