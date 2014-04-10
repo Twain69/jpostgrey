@@ -55,12 +55,14 @@ public class InputThread extends Thread {
 			InputRecord inputRecord = null;
 			try {
 				inputRecord = builder.build();
+				out = new OutputStreamWriter(socket.getOutputStream());
+				out.write(findTripletAndBuildOutputRecord(inputRecord)
+						.toString());
+				out.write(String.format("%n"));
 			} catch (BuilderNotCompleteException e) {
 				log(Priority.INFO_INT,
 						"Not all records received ... have to reject");
 			}
-			out = new OutputStreamWriter(socket.getOutputStream());
-			out.write(findTripletAndBuildOutputRecord(inputRecord).toString());
 		} catch (IOException e) {
 			for (StackTraceElement element : e.getStackTrace()) {
 				log(Priority.ERROR_INT, element.toString());

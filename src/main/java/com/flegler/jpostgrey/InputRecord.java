@@ -9,7 +9,7 @@ import com.flegler.jpostgrey.exception.BuilderNotCompleteException;
 
 public class InputRecord {
 
-	private final Logger LOG = Logger.getLogger(InputRecord.class);
+	private static final Logger LOG = Logger.getLogger(InputRecord.class);
 
 	// private final String protocol; // protocol_state=RCPT
 	// private final String protocolName; // protocol_name=ESMTP
@@ -56,7 +56,12 @@ public class InputRecord {
 			if (input != null) {
 				String[] tmp = input.split("=");
 				String key = tmp[0];
-				Object value = tmp[1];
+				Object value;
+				if (tmp.length > 1) {
+					value = tmp[1];
+				} else {
+					value = new String("");
+				}
 				if (key != null) {
 					switch (key.toLowerCase()) {
 					case "client_address":

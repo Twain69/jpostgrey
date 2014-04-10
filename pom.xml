@@ -5,7 +5,7 @@
 	<groupId>com.flegler</groupId>
 	<artifactId>jpostgrey</artifactId>
 	<packaging>jar</packaging>
-	<version>1.0.0</version>
+	<version>1.0.0-SNAPSHOT</version>
 	<name>jpostgrey</name>
 	<url>http://maven.apache.org</url>
 
@@ -166,9 +166,15 @@
 							<sources>
 								<source>
 									<location>data/jpostgrey.conf</location>
-									<destination>jpostgrey.conf</destination>
+									<destination>jpostgrey.conf.sample</destination>
 								</source>
 							</sources>
+						</mapping>
+						<mapping>
+							<directory>/var/run/jpostgrey</directory>
+							<filemode>770</filemode>
+							<username>root</username>
+							<groupname>root</groupname>
 						</mapping>
 					</mappings>
 				</configuration>

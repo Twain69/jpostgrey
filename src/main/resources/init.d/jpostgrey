@@ -15,21 +15,11 @@
 prog=jpostgrey
 
 PIDFILE=/var/run/jpostgrey/jpostgrey.conf
-CONFIGFILE=//home/oxmox/workspace/jpostgrey/data/jpostgrey.conf
+CONFIGFILE=/etc/jpostgrey.conf
 
 OPTIONS="-p $PIDFILE -c $CONFIGFILE"
 
 JPOSTGREY=/usr/share/jpostgrey/jpostgrey
-
-do_restart_sanity_check()
-{
-        $SSHD -t
-        RETVAL=$?
-        if [ $RETVAL -ne  0 ]; then
-                failure $"Configuration file or keys are invalid"
-                echo
-        fi
-}
 
 start()
 {

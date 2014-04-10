@@ -90,10 +90,7 @@ public class JPostGrey {
 
 		String configFile = cmd.getOptionValue("c");
 		if (configFile == null) {
-			System.err
-					.println("You have to provide a config file parameter (-c)");
-			System.err.println();
-			printHelp(options);
+			configFile = "/etc/jpostgrey.conf";
 		}
 
 		String pidfile = cmd.getOptionValue("p");

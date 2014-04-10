@@ -1,4 +1,6 @@
 #!/bin/bash
 
+source /etc/profile
+java=$(which java)
 
-java -jar /usr/share/jpostgrey/jpostgrey.jar $*
+$java -jar /usr/share/jpostgrey/jpostgrey.jar $*

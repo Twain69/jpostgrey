@@ -69,8 +69,7 @@ public class Settings {
 			bundle = new PropertyResourceBundle(fis);
 		} catch (IOException e) {
 			LOG.error("Could not load config file '"
-					+ this.configFile.getAbsolutePath() + "/"
-					+ this.configFile.getName() + "'");
+					+ this.configFile.getAbsolutePath());
 		}
 
 		// only set this at the first settings load run. this can not be changed

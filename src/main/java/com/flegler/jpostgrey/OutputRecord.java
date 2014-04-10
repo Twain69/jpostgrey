@@ -34,11 +34,15 @@ public class OutputRecord {
 	@Override
 	public String toString() {
 		StringBuilder sb = new StringBuilder();
-		sb.append("action=").append(action).append(" ").append("reason=")
-				.append(reason).append(" ").append("client_address=")
-        .append(inputRecord.getClientAddress().getHostAddress().toString()).append(" ")
-				.append("sender=").append(inputRecord.getSender()).append(" ")
-				.append("recipient=").append(inputRecord.getRecipient());
+		sb.append("action=").append(action).append(" ");
+		// .append("reason=")
+		// .append(reason)
+		// .append(" ")
+		// .append("client_address=")
+		// .append(inputRecord.getClientAddress().getHostAddress()
+		// .toString()).append(" ").append("sender=")
+		// .append(inputRecord.getSender()).append(" ")
+		// .append("recipient=").append(inputRecord.getRecipient());
 		return sb.toString();
 	}
 }

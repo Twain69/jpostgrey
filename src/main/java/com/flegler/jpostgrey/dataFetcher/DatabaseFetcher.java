@@ -101,8 +101,8 @@ public class DatabaseFetcher implements DataFetcher {
 		PreparedStatement stmt = connection
 				.prepareStatement("SELECT firstconnect FROM greylist WHERE clientaddress = ? AND sender = ? AND recipient = ?");
 		stmt.setString(1, inputRecord.getClientAddress().getHostAddress());
-		stmt.setString(2, inputRecord.getSender());
-		stmt.setString(3, inputRecord.getRecipient());
+		stmt.setString(2, inputRecord.getSender().toLowerCase());
+		stmt.setString(3, inputRecord.getRecipient().toLowerCase());
 		ResultSet result = stmt.executeQuery();
 
 		boolean recordFound = false;
@@ -134,8 +134,8 @@ public class DatabaseFetcher implements DataFetcher {
 		stmt.setTimestamp(2, now);
 		stmt.setInt(3, 1);
 		stmt.setString(4, inputRecord.getClientAddress().getHostAddress());
-		stmt.setString(5, inputRecord.getSender());
-		stmt.setString(6, inputRecord.getRecipient());
+		stmt.setString(5, inputRecord.getSender().toLowerCase());
+		stmt.setString(6, inputRecord.getRecipient().toLowerCase());
 		stmt.executeUpdate();
 	}
 
@@ -146,8 +146,8 @@ public class DatabaseFetcher implements DataFetcher {
 		Timestamp now = new Timestamp(new GregorianCalendar().getTimeInMillis());
 		stmt.setTimestamp(1, now);
 		stmt.setString(2, inputRecord.getClientAddress().getHostAddress());
-		stmt.setString(3, inputRecord.getSender());
-		stmt.setString(4, inputRecord.getRecipient());
+		stmt.setString(3, inputRecord.getSender().toLowerCase());
+		stmt.setString(4, inputRecord.getRecipient().toLowerCase());
 		stmt.executeUpdate();
 	}
 
