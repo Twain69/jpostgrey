@@ -49,16 +49,21 @@ public class InputThread extends Thread {
 				log(Priority.DEBUG_INT, "Got message '" + inputString + "'");
 				if (inputString != null && !inputString.isEmpty()) {
 					builder.addRow(inputString);
-
 				}
 			} while (inputString != null && !inputString.isEmpty());
 			InputRecord inputRecord = null;
 			try {
 				inputRecord = builder.build();
 				out = new OutputStreamWriter(socket.getOutputStream());
-				out.write(findTripletAndBuildOutputRecord(inputRecord)
-						.toString());
+
+				String resultString = findTripletAndBuildOutputRecord(inputRecord);
+
+				out.flush();
+
+				out.write(resultString);
 				out.write(String.format("%n"));
+				out.write(String.format("%n"));
+
 			} catch (BuilderNotCompleteException e) {
 				log(Priority.INFO_INT,
 						"Not all records received ... have to reject");
@@ -81,13 +86,14 @@ public class InputThread extends Thread {
 		}
 	}
 
-	public OutputRecord findTripletAndBuildOutputRecord(InputRecord inputRecord) {
+	public String findTripletAndBuildOutputRecord(InputRecord inputRecord) {
+		StringBuilder resultSB = new StringBuilder();
+		resultSB.append("action=");
 		log(Priority.INFO_INT,
 				String.format(
 						"Performing search in backend for sender: '%s', recipient: '%s', clientAddress: '%s' ",
 						inputRecord.getSender(), inputRecord.getRecipient(),
 						inputRecord.getClientAddress().getHostAddress()));
-		OutputRecord outputRecord = new OutputRecord(inputRecord);
 
 		try {
 			Settings settings = Settings.getInstance();
@@ -96,13 +102,11 @@ public class InputThread extends Thread {
 			FetcherResult result = fetcher.getResult(inputRecord);
 
 			if (result.getWhitelisted()) {
-				outputRecord.setReason(Reason.WHITELIST);
-				outputRecord.setAction(Action.PASS);
+				resultSB.append("DUNNO");
 				log(Priority.INFO_INT, "InputRecord is whitelisted");
 			} else {
 				if (result.getFirstConnect() == 0L) {
-					outputRecord.setReason(Reason.NEW);
-					outputRecord.setAction(Action.DEFER_IF_PERMIT);
+					resultSB.append("DEFER 4.2.0 Greylisted, please come back later.");
 					log(Priority.INFO_INT, "This is a new InputRecord");
 				} else {
 					int duration = new Long(
@@ -110,29 +114,30 @@ public class InputThread extends Thread {
 							.intValue();
 
 					if (duration >= Settings.getInstance().getGreylistingTime()) {
-						outputRecord.setReason(Reason.TRIPLET_FOUND);
-						outputRecord.setAction(Action.PASS);
+						resultSB.append("DUNNO");
 					} else {
-						outputRecord.setReason(Reason.EARLY_RETRY);
-						outputRecord.setAction(Action.DEFER_IF_PERMIT);
+						int remaining = Settings.getInstance()
+								.getGreylistingTime() - duration;
+						resultSB.append("DEFER 4.2.0 Greylisted, early retry ("
+								+ remaining
+								+ " seconds remaining). Please come back later.");
 					}
 					log(Priority.INFO_INT,
 							String.format(
 									"InputRecord found in backend. Duration since the first connect is '%d'. Current min duration: '%d'. Action: '%s'",
 									duration, Settings.getInstance()
-											.getGreylistingTime(), outputRecord
-											.getAction().toString()));
+											.getGreylistingTime(), resultSB
+											.toString()));
 				}
 			}
 
 		} catch (NullPointerException e) {
 			log(Priority.ERROR_INT,
 					"Something went really bad here! The datafetcher was missing.");
-			outputRecord.setReason(Reason.ERROR);
-			outputRecord.setAction(Action.DUNNO);
+			resultSB.append("DUNNO");
 		}
 
-		return outputRecord;
+		return resultSB.toString();
 	}
 
 	private void log(int priority, String message) {

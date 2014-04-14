@@ -14,7 +14,7 @@
 
 prog=jpostgrey
 
-PIDFILE=/var/run/jpostgrey/jpostgrey.conf
+PIDFILE=/var/run/jpostgrey/jpostgrey.pid
 CONFIGFILE=/etc/jpostgrey.conf
 
 OPTIONS="-p $PIDFILE -c $CONFIGFILE"
@@ -27,7 +27,14 @@ start()
         [ -f $CONFIFILE ] || exit 6
 
         echo -n $"Starting $prog: "
-        $JPOSTGREY $OPTIONS && success || failure
+        nohup $JPOSTGREY $OPTIONS >/dev/null 2>/dev/null &
+        sleep 2
+        pid=$(cat ${PIDFILE})
+        if [[ $(ps auxwww | grep ${pid} | grep -v grep | wc -l) > 0 ]]; then
+        	success
+        else
+        	failure
+        fi 
         RETVAL=$?
         echo
         return $RETVAL
@@ -35,7 +42,7 @@ start()
 stop()
 {
         echo -n $"Stopping $prog: "
-        killproc -p $PID_FILE $JPOSTGREY
+        kill $(cat ${PIDFILE})
         RETVAL=$?
         echo
 }
@@ -44,7 +51,7 @@ restart() {
         start
 }
 rh_status() {
-        status -p $PID_FILE jpostgrey
+        status -p $PIDFILE jpostgrey
 }
 rh_status_q() {
         rh_status >/dev/null 2>&1
@@ -62,6 +69,7 @@ case "$1" in
 			exit 0
 		fi
 		stop
+		rm $PIDFILE
 		;;
     restart)
     	restart

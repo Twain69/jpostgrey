@@ -4,15 +4,8 @@ public class OutputRecord {
 
 	private Action action;
 	private Reason reason;
-	private final InputRecord inputRecord;
 
-	@SuppressWarnings("unused")
-	private OutputRecord() {
-		throw new ExceptionInInitializerError("This is not ment to be called!");
-	}
-
-	public OutputRecord(InputRecord inputRecord) {
-		this.inputRecord = inputRecord;
+	public OutputRecord() {
 	}
 
 	public Action getAction() {
@@ -34,15 +27,8 @@ public class OutputRecord {
 	@Override
 	public String toString() {
 		StringBuilder sb = new StringBuilder();
-		sb.append("action=").append(action).append(" ");
-		// .append("reason=")
-		// .append(reason)
-		// .append(" ")
-		// .append("client_address=")
-		// .append(inputRecord.getClientAddress().getHostAddress()
-		// .toString()).append(" ").append("sender=")
-		// .append(inputRecord.getSender()).append(" ")
-		// .append("recipient=").append(inputRecord.getRecipient());
+		sb.append("action=").append(action).append(" ")
+				.append("4.2.0 Greylisted, please come back later");
 		return sb.toString();
 	}
 }
