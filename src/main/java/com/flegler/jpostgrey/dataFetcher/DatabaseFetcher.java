@@ -17,31 +17,7 @@ import com.flegler.jpostgrey.exception.InputRecordNotFoundException;
 import com.flegler.jpostgrey.interfaces.DataFetcher;
 
 /**
- * <pre>
- *  Database creation:
- * **************************************************************************** 
- *  -- Table: greylist
- *  
- *  CREATE TABLE greylist (
- *  	clientaddress character varying(15),
- *  	sender character varying(255),
- *  	recipient character varying(255),
- *  	connectcount bigint,
- *  	firstconnect timestamp without time zone,
- *  	lastconnect timestamp without time zone ) 
- *  	WITH ( OIDS=FALSE );
- *  
- *  ALTER TABLE greylist OWNER TO jpostgrey;
- *  
- *  -- Index: idx
- *  
- *  -- DROP INDEX idx;
- *  
- *  CREATE INDEX idx ON greylist USING btree (clientaddress, sender, recipient);
- ******************************************************************************
- * </pre>
- * 
- * @author Oliver Flegler <oliver@flegler.com>
+ * @author Oliver Flegler
  * 
  */
 public class DatabaseFetcher implements DataFetcher {

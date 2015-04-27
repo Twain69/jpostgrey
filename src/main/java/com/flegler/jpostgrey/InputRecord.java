@@ -11,31 +11,9 @@ public class InputRecord {
 
 	private static final Logger LOG = Logger.getLogger(InputRecord.class);
 
-	// private final String protocol; // protocol_state=RCPT
-	// private final String protocolName; // protocol_name=ESMTP
-	// private final String clientName; // client_name=idefix.flegler.com
-	// private final String reverseClientName; //
-	// reverse_client_name=idefix.flegler.com
-	// private final String heloName; // helo_name=idefix.flegler.com
-	// private final Integer recipientCount; // recipient_count=0
-	// queue_id=
-	// instance=4705.5300a841.e358.0
-	// size=1533
-	// etrn_domain=
-	// stress=
-	// sasl_method=
-	// sasl_username=
-	// sasl_sender=
-	// ccert_subject=
-	// ccert_issuer=
-	// ccert_fingerprint=
-	// ccert_pubkey_fingerprint=
-	// encryption_protocol=
-	// encryption_cipher=
-	// encryption_keysize=0
-	private final Inet4Address clientAddress; // client_address=10.200.10.20
-	private final String sender; // sender=oxmox@idefix.flegler.com
-	private final String recipient; // recipient=oxmox@oxmox-nb.flegler.com
+	private final Inet4Address clientAddress;
+	private final String sender;
+	private final String recipient;
 
 	private InputRecord(InputRecordBuilder builder) {
 		this.clientAddress = builder.clientAddress;

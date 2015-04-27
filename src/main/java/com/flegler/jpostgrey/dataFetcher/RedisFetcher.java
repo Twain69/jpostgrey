@@ -21,7 +21,7 @@ import com.google.gson.Gson;
  * Value: firstConnect|lastConnect (Long fields)
  * </pre>
  * 
- * @author Oliver Flegler <oliver@flegler.com>
+ * @author Oliver Flegler
  *
  */
 public class RedisFetcher implements DataFetcher {

@@ -34,7 +34,6 @@ public class MemoryData implements DataFetcher {
 	 * 
 	 * @param inputRecord
 	 * @return
-	 * @throws InputRecordNotFoundException
 	 */
 	@Override
 	public FetcherResult getResult(InputRecord inputRecord) {
