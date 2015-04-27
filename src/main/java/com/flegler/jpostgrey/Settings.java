@@ -37,6 +37,9 @@ public class Settings {
 	private String dataFetcherDBName;
 	private String dataFetcherDBUser;
 	private String dataFetcherDBPassword;
+	
+	private String redisHost;
+	private Integer redisPort;
 
 	private String pidFileName;
 
@@ -118,6 +121,24 @@ public class Settings {
 		} catch (MissingResourceException e) {
 			if (bundle.getString("application.datafetcher.type").equals(
 					"com.flegler.jpostgrey.dataFetcher.DatabaseFetcher")) {
+				String errorMessage = "There is some configuration missing: "
+						+ e.getLocalizedMessage();
+				LOG.error(errorMessage);
+				System.err.println(errorMessage);
+				System.exit(1);
+			}
+		}
+		
+		try {
+			this.redisHost = bundle.getString("application.datafetcher.redis.host");
+			this.redisPort = Integer.valueOf(bundle.getString("application.datafetcher.redis.port"));
+		} catch(NumberFormatException e) {
+			LOG.error("RedisPort in wrong format");
+			LOG.error(e);
+			System.exit(1);
+		} catch(MissingResourceException e) {
+			if (bundle.getString("application.datafetcher.type").equals(
+					"com.flegler.jpostgrey.dataFetcher.RedisFetcher")) {
 				String errorMessage = "There is some configuration missing: "
 						+ e.getLocalizedMessage();
 				LOG.error(errorMessage);
@@ -234,5 +255,12 @@ public class Settings {
 	public String getPidFileName() {
 		return pidFileName;
 	}
-
+	
+	public String getRedisHost() {
+		return this.redisHost;
+	}
+	
+	public Integer getRedisPort() {
+		return this.redisPort;
+	}
 }

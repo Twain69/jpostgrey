@@ -3,4 +3,4 @@
 source /etc/profile
 java=$(which java)
 
-$java -jar /usr/share/jpostgrey/jpostgrey.jar $*
+$java -Dlog4j.configuration=file:/etc/jpostgrey/logging.conf -jar /usr/share/jpostgrey/jpostgrey.jar $*
