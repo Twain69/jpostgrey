@@ -4,7 +4,7 @@
 	<groupId>com.flegler</groupId>
 	<artifactId>jpostgrey</artifactId>
 	<packaging>jar</packaging>
-	<version>1.1.1-SNAPSHOT</version>
+	<version>1.2.0</version>
 	<name>jpostgrey</name>
 
 	<developers>
@@ -18,7 +18,7 @@
 
 	<scm>
 		<developerConnection>scm:git:https://github.com/Twain69/jpostgrey.git</developerConnection>
-		<tag>HEAD</tag>
+		<tag>1.2.0</tag>
 	</scm>
 
 	<dependencies>
