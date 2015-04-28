@@ -3,7 +3,6 @@ package com.flegler.jpostgrey;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.lang.management.ManagementFactory;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.List;
@@ -213,8 +212,7 @@ public class JPostGrey {
 	private static void writePid() {
 		FileWriter fw = null;
 		try {
-			Integer pid = new Integer(ManagementFactory.getRuntimeMXBean()
-					.getName().split("@")[0]);
+			Integer pid = Util.getPid();
 			File pidFile = new File(Settings.getInstance().getPidFileName());
 			if (!pidFile.exists()) {
 				pidFile.createNewFile();

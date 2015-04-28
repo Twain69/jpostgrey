@@ -1,5 +1,7 @@
 package com.flegler.jpostgrey;
 
+import java.lang.management.ManagementFactory;
+
 public class Util {
 	public String getVersion() {
 		String version = getClass().getPackage().getImplementationVersion();
@@ -15,6 +17,11 @@ public class Util {
 			title = "n/a";
 		}
 		return title;
+	}
+
+	public static Integer getPid() {
+		return Integer.valueOf(ManagementFactory.getRuntimeMXBean().getName()
+				.split("@")[0]);
 	}
 
 }
