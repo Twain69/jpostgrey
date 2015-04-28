@@ -168,6 +168,7 @@
 							<filemode>770</filemode>
 							<username>root</username>
 							<groupname>root</groupname>
+							<directoryIncluded>false</directoryIncluded>
 							<sources>
 								<source>
 									<location>src/main/resources/sh/jpostgrey</location>
