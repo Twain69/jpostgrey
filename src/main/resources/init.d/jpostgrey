@@ -17,7 +17,7 @@ prog=jpostgrey
 PIDFILE=/var/run/jpostgrey/jpostgrey.pid
 CONFIGFILE=/etc/jpostgrey.conf
 
-OPTIONS="DAEMON -p $PIDFILE -c $CONFIGFILE -r DAEMON"
+OPTIONS="-p $PIDFILE -c $CONFIGFILE -r DAEMON"
 
 JPOSTGREY=/usr/bin/jpostgrey
 
@@ -47,6 +47,7 @@ stop()
 }
 restart() {
         stop
+        sleep 1
         start
 }
 rh_status() {

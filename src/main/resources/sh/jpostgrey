@@ -4,12 +4,35 @@ source /etc/profile
 java=$(which java)
 JPOSTGREY_JAR=/usr/share/jpostgrey/jpostgrey.jar
 
-RUNMODE="$1"
+while getopts "p:c:r:" opt; do
+	case $opt in
+	p)
+		PIDFILE=$OPTARG
+		;;
+	c)
+		CONFIGFILE=$OPTARG
+		;;
+	r)
+		RUNMODE=$OPTARG
+		;;
+	esac
+	shift; shift
+done
+
+# Setting defaults
+if [[ -z "${PIDFILE}" ]]; then
+	PIDFILE=/tmp/jpostgrey.pid
+fi
+
+if [[ -z "${CONFIGFILE}" ]]; then
+	CONFIGFILE=/etc/jpostgrey.conf
+fi
+
 
 if [[ "${RUNMODE}" == "DAEMON" ]]; then
 	shift
-	nohup $java "DAEMON" -Dlog4j.configuration=file:/etc/jpostgrey/logging.conf -jar ${JPOSTGREY_JAR} $*
+	nohup $java "DAEMON" -Dlog4j.configuration=file:/etc/jpostgrey/logging.conf -jar ${JPOSTGREY_JAR} -r ${RUNMODE} -p ${PIDFILE} -c ${CONFIGFILE} $*
 	sleep 2
 else
-	$java -Dlog4j.configuration=file:/etc/jpostgrey/logging.conf -jar ${JPOSTGREY_JAR} $*
+	$java -Dlog4j.configuration=file:/etc/jpostgrey/logging.conf -jar ${JPOSTGREY_JAR} -r ${RUNMODE} -p ${PIDFILE} -c ${CONFIGFILE} $*
 fi
