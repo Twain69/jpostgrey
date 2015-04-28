@@ -11,10 +11,12 @@ import java.util.UUID;
 import org.apache.log4j.Logger;
 import org.apache.log4j.Priority;
 
-import com.flegler.jpostgrey.InputRecord.InputRecordBuilder;
 import com.flegler.jpostgrey.dataFetcher.FetcherResult;
 import com.flegler.jpostgrey.exception.BuilderNotCompleteException;
+import com.flegler.jpostgrey.exception.InputRecordNotFoundException;
 import com.flegler.jpostgrey.interfaces.DataFetcher;
+import com.flegler.jpostgrey.model.InputRecord;
+import com.flegler.jpostgrey.model.InputRecord.InputRecordBuilder;
 
 public class InputThread extends Thread {
 
@@ -101,36 +103,35 @@ public class InputThread extends Thread {
 
 			FetcherResult result = fetcher.getResult(inputRecord);
 
+			// Check if inputrecord is whitelisted and return if true
 			if (result.getWhitelisted()) {
 				resultSB.append("DUNNO");
 				log(Priority.INFO_INT, "InputRecord is whitelisted");
-			} else {
-				if (result.getFirstConnect() == 0L) {
-					resultSB.append("DEFER 4.2.0 Greylisted, please come back later.");
-					log(Priority.INFO_INT, "This is a new InputRecord");
-				} else {
-					int duration = new Long(
-							((new Date()).getTime() - result.getFirstConnect()) / 1000)
-							.intValue();
-
-					if (duration >= Settings.getInstance().getGreylistingTime()) {
-						resultSB.append("DUNNO");
-					} else {
-						int remaining = Settings.getInstance()
-								.getGreylistingTime() - duration;
-						resultSB.append("DEFER 4.2.0 Greylisted, early retry ("
-								+ remaining
-								+ " seconds remaining). Please come back later.");
-					}
-					log(Priority.INFO_INT,
-							String.format(
-									"InputRecord found in backend. Duration since the first connect is '%d'. Current min duration: '%d'. Action: '%s'",
-									duration, Settings.getInstance()
-											.getGreylistingTime(), resultSB
-											.toString()));
-				}
+				return resultSB.toString();
 			}
 
+			int duration = new Long(
+					((new Date()).getTime() - result.getFirstConnect()) / 1000)
+					.intValue();
+
+			if (duration >= Settings.getInstance().getGreylistingTime()) {
+				resultSB.append("DUNNO");
+			} else {
+				int remaining = Settings.getInstance().getGreylistingTime()
+						- duration;
+				resultSB.append("DEFER 4.2.0 Greylisted, early retry ("
+						+ remaining
+						+ " seconds remaining). Please come back later.");
+			}
+			log(Priority.INFO_INT,
+					String.format(
+							"InputRecord found in backend. Duration since the first connect is '%d'. Current min duration: '%d'. Action: '%s'",
+							duration, Settings.getInstance()
+									.getGreylistingTime(), resultSB.toString()));
+
+		} catch (InputRecordNotFoundException e) {
+			resultSB.append("DEFER 4.2.0 Greylisted, please come back later.");
+			log(Priority.INFO_INT, "This is a new InputRecord");
 		} catch (NullPointerException e) {
 			log(Priority.ERROR_INT,
 					"Something went really bad here! The datafetcher was missing.");

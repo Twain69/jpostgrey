@@ -1,4 +1,7 @@
-package com.flegler.jpostgrey;
+package com.flegler.jpostgrey.model;
+
+import com.flegler.jpostgrey.enums.Action;
+import com.flegler.jpostgrey.enums.Reason;
 
 public class OutputRecord {
 

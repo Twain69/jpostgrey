@@ -7,10 +7,10 @@ import org.apache.log4j.Logger;
 
 import redis.clients.jedis.Jedis;
 
-import com.flegler.jpostgrey.InputRecord;
 import com.flegler.jpostgrey.Settings;
 import com.flegler.jpostgrey.exception.InputRecordNotFoundException;
 import com.flegler.jpostgrey.interfaces.DataFetcher;
+import com.flegler.jpostgrey.model.InputRecord;
 import com.google.gson.Gson;
 
 /**

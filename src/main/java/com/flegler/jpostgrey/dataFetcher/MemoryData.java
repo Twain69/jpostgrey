@@ -7,11 +7,11 @@ import java.util.concurrent.Semaphore;
 
 import org.apache.log4j.Logger;
 
-import com.flegler.jpostgrey.InputRecord;
-import com.flegler.jpostgrey.Record;
 import com.flegler.jpostgrey.Settings;
 import com.flegler.jpostgrey.exception.InputRecordNotFoundException;
 import com.flegler.jpostgrey.interfaces.DataFetcher;
+import com.flegler.jpostgrey.model.InputRecord;
+import com.flegler.jpostgrey.model.Record;
 
 public class MemoryData implements DataFetcher {
 

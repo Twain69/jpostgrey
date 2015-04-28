@@ -2,5 +2,14 @@
 
 source /etc/profile
 java=$(which java)
+JPOSTGREY_JAR=/usr/share/jpostgrey/jpostgrey.jar
 
-$java -Dlog4j.configuration=file:/etc/jpostgrey/logging.conf -jar /usr/share/jpostgrey/jpostgrey.jar $*
+RUNMODE="$1"
+
+if [[ "${RUNMODE}" == "DAEMON" ]]; then
+	shift
+	nohup $java "DAEMON" -Dlog4j.configuration=file:/etc/jpostgrey/logging.conf -jar ${JPOSTGREY_JAR} $*
+	sleep 2
+else
+	$java -Dlog4j.configuration=file:/etc/jpostgrey/logging.conf -jar ${JPOSTGREY_JAR} $*
+fi

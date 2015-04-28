@@ -1,4 +1,4 @@
-package com.flegler.jpostgrey;
+package com.flegler.jpostgrey.model;
 
 import java.net.Inet4Address;
 import java.net.UnknownHostException;

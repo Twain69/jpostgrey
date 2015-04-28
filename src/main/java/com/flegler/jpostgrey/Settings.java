@@ -15,6 +15,7 @@ import java.util.ResourceBundle;
 import org.apache.log4j.Logger;
 
 import com.flegler.jpostgrey.interfaces.DataFetcher;
+import com.flegler.jpostgrey.model.WhiteListEntry;
 
 public class Settings {
 
@@ -42,6 +43,8 @@ public class Settings {
 	private Integer redisPort;
 
 	private String pidFileName;
+
+	private WhiteListEntry addDelWhiteListEntry;
 
 	private Settings() {
 	}
@@ -263,4 +266,13 @@ public class Settings {
 	public Integer getRedisPort() {
 		return this.redisPort;
 	}
+
+	public WhiteListEntry getAddDelWhiteListEntry() {
+		return addDelWhiteListEntry;
+	}
+
+	public void setAddDelWhiteListEntry(WhiteListEntry addDelWhiteListEntry) {
+		this.addDelWhiteListEntry = addDelWhiteListEntry;
+	}
+
 }

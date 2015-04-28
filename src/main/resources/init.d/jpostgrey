@@ -17,9 +17,9 @@ prog=jpostgrey
 PIDFILE=/var/run/jpostgrey/jpostgrey.pid
 CONFIGFILE=/etc/jpostgrey.conf
 
-OPTIONS="-p $PIDFILE -c $CONFIGFILE"
+OPTIONS="DAEMON -p $PIDFILE -c $CONFIGFILE -r DAEMON"
 
-JPOSTGREY=/usr/share/jpostgrey/jpostgrey
+JPOSTGREY=/usr/bin/jpostgrey
 
 start()
 {
@@ -27,8 +27,7 @@ start()
         [ -f $CONFIFILE ] || exit 6
 
         echo -n $"Starting $prog: "
-        nohup $JPOSTGREY $OPTIONS >/dev/null 2>/dev/null &
-        sleep 2
+        $JPOSTGREY $OPTIONS >/dev/null 2>/dev/null &
         pid=$(cat ${PIDFILE})
         if [[ $(ps auxwww | grep ${pid} | grep -v grep | wc -l) > 0 ]]; then
         	success
