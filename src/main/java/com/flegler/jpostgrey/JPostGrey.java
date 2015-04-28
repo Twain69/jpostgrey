@@ -121,7 +121,9 @@ public class JPostGrey {
 		try {
 			cmd = parser.parse(options, args);
 		} catch (ParseException e) {
-			System.err.println("Error while parsing the arguments");
+			System.err.println("Error while parsing the arguments ("
+					+ e.getLocalizedMessage() + ")");
+			System.err.println(e);
 			System.exit(-1);
 		}
 
@@ -246,7 +248,7 @@ public class JPostGrey {
 	private static void printWhitelistEntries(List<WhiteListEntry> entries) {
 		System.out.println("Number of entries found: " + entries.size());
 		int count = 1;
-		for(WhiteListEntry entry: entries) {
+		for (WhiteListEntry entry : entries) {
 			System.out.print(String.format(
 					"%-3d: Pattern: %s%n     Comment: %s", count++,
 					entry.getPattern(), entry.getComment()));

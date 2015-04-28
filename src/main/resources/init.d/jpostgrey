@@ -27,7 +27,7 @@ start()
         [ -f $CONFIFILE ] || exit 6
 
         echo -n $"Starting $prog: "
-        $JPOSTGREY $OPTIONS >/dev/null 2>/dev/null &
+        $JPOSTGREY $OPTIONS >/dev/null 2>/dev/null
         pid=$(cat ${PIDFILE})
         if [[ $(ps auxwww | grep ${pid} | grep -v grep | wc -l) > 0 ]]; then
         	success
