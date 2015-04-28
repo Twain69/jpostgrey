@@ -14,10 +14,10 @@
 
 prog=jpostgrey
 
-PIDFILE=/var/run/jpostgrey/jpostgrey.pid
-CONFIGFILE=/etc/jpostgrey.conf
+export PIDFILE=/var/run/jpostgrey/jpostgrey.pid
+export CONFIGFILE=/etc/jpostgrey.conf
 
-OPTIONS="-p $PIDFILE -c $CONFIGFILE -r DAEMON"
+OPTIONS="-r DAEMON"
 
 JPOSTGREY=/usr/bin/jpostgrey
 
