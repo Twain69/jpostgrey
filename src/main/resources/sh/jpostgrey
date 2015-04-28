@@ -20,7 +20,6 @@ fi
 echo "RUNMODE: $RUNMODE"
 
 if [[ "${RUNMODE}" == "DAEMON" ]]; then
-	shift
 	nohup $java -Dlog4j.configuration=file:/etc/jpostgrey/logging.conf -jar ${JPOSTGREY_JAR} -p ${PIDFILE} -c ${CONFIGFILE} $* &
 	sleep 2
 else
