@@ -24,9 +24,9 @@ import com.google.gson.Gson;
  * @author Oliver Flegler
  *
  */
-public class RedisFetcher implements DataFetcher {
+public class RedisDataFetcher implements DataFetcher {
 
-	private static final Logger LOG = Logger.getLogger(RedisFetcher.class);
+	private static final Logger LOG = Logger.getLogger(RedisDataFetcher.class);
 	private static final String REDISFIELD_SEPARATOR = "^";
 
 	private Jedis jedis;

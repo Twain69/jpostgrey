@@ -13,15 +13,15 @@ import com.flegler.jpostgrey.interfaces.DataFetcher;
 import com.flegler.jpostgrey.model.InputRecord;
 import com.flegler.jpostgrey.model.Record;
 
-public class MemoryData implements DataFetcher {
+public class MemoryDataFetcher implements DataFetcher {
 
 	private final List<Record> recordList;
 
 	private final Semaphore writeLock = new Semaphore(1);
 
-	private final Logger LOG = Logger.getLogger(MemoryData.class);
+	private final Logger LOG = Logger.getLogger(MemoryDataFetcher.class);
 
-	private MemoryData() {
+	public MemoryDataFetcher() {
 		recordList = new ArrayList<>();
 	}
 
@@ -34,9 +34,11 @@ public class MemoryData implements DataFetcher {
 	 * 
 	 * @param inputRecord
 	 * @return
+	 * @throws InputRecordNotFoundException
 	 */
 	@Override
-	public FetcherResult getResult(InputRecord inputRecord) {
+	public FetcherResult getResult(InputRecord inputRecord)
+			throws InputRecordNotFoundException {
 		FetcherResult result = new FetcherResult();
 		if (recordList != null && !recordList.isEmpty()) {
 			int index = -1;
@@ -69,9 +71,9 @@ public class MemoryData implements DataFetcher {
 			result.setFirstConnect(firstHit.getTime());
 			return result;
 		} else {
-			result.setFirstConnect(0L);
+			result.setFirstConnect(new Date().getTime());
 			addNewRecord(inputRecord);
-			return result;
+			throw new InputRecordNotFoundException();
 		}
 
 	}
@@ -94,7 +96,7 @@ public class MemoryData implements DataFetcher {
 
 	@Override
 	public void setUp(Settings settings) {
-		// this is left intentionally, since it is not needed here
+		// this is left empty intentionally, since it is not needed here
 	}
 
 }

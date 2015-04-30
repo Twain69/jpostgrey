@@ -23,9 +23,9 @@ import com.flegler.jpostgrey.model.WhiteListEntry;
  * @author Oliver Flegler
  * 
  */
-public class DatabaseFetcher implements DataFetcher {
+public class DatabaseDataFetcher implements DataFetcher {
 
-	private static final Logger LOG = Logger.getLogger(DatabaseFetcher.class);
+	private static final Logger LOG = Logger.getLogger(DatabaseDataFetcher.class);
 
 	private Connection connection;
 
@@ -35,7 +35,7 @@ public class DatabaseFetcher implements DataFetcher {
 	private String user;
 	private String password;
 
-	public DatabaseFetcher() {
+	public DatabaseDataFetcher() {
 	}
 
 	@Override
