@@ -23,6 +23,9 @@ import com.flegler.jpostgrey.enums.RunMode;
 import com.flegler.jpostgrey.model.WhiteListEntry;
 
 public class JPostGrey {
+
+	public static final String DEFAULT_CONFIG_FILE = "/etc/jpostgrey.conf";
+
 	private static final Logger LOG = Logger.getLogger(JPostGrey.class);
 
 	// TODO Add programatic configured log4j syslog appender
@@ -127,23 +130,23 @@ public class JPostGrey {
 		}
 
 		Boolean help = cmd.hasOption("h");
+		String pidfile = cmd.getOptionValue("p");
+		String configFile = cmd.getOptionValue("c");
+		String runmode = cmd.getOptionValue("r");
+		String pattern = cmd.getOptionValue("m");
+		String comment = cmd.getOptionValue("k");
+		RunMode rm;
+
+		Settings settings = Settings.getInstance();
+
 		if (help) {
 			printHelp(options);
 		}
 
-		String configFile = cmd.getOptionValue("c");
 		if (configFile == null) {
-			configFile = "/etc/jpostgrey.conf";
+			// set the default config file
+			configFile = DEFAULT_CONFIG_FILE;
 		}
-
-		String pidfile = cmd.getOptionValue("p");
-		if (pidfile == null) {
-			System.err.println("You have to provide a pidfile");
-			System.err.println();
-			printHelp(options);
-		}
-
-		Settings settings = Settings.getInstance();
 
 		try {
 			settings.setConfigFile(new File(configFile));
@@ -157,20 +160,16 @@ public class JPostGrey {
 			System.exit(-1);
 		}
 
-		String runmode = cmd.getOptionValue("r");
 		if (runmode == null) {
 			System.err.println("You have to provide a pidfile");
 			System.err.println();
 			printHelp(options);
 		}
 
-		String pattern = cmd.getOptionValue("m");
-
-		String comment = cmd.getOptionValue("k");
-
 		switch (runmode.toUpperCase()) {
 		case "DAEMON":
-			return RunMode.DAEMON;
+			rm = RunMode.DAEMON;
+			break;
 		case "ADD":
 			if (StringUtils.isEmpty(pattern) || StringUtils.isEmpty(comment)) {
 				System.err
@@ -180,7 +179,8 @@ public class JPostGrey {
 			}
 			settings.setAddDelWhiteListEntry(new WhiteListEntry(pattern,
 					comment));
-			return RunMode.ADD_WHITELIST;
+			rm = RunMode.ADD_WHITELIST;
+			break;
 		case "DEL":
 			if (StringUtils.isEmpty(pattern)) {
 				System.err
@@ -189,18 +189,29 @@ public class JPostGrey {
 				System.exit(-1);
 			}
 			settings.setAddDelWhiteListEntry(new WhiteListEntry(pattern, null));
-			return RunMode.DEL_WHITELIST;
+			rm = RunMode.DEL_WHITELIST;
+			break;
 		case "LIST":
-			return RunMode.LIST_WHITELIST;
+			rm = RunMode.LIST_WHITELIST;
+			break;
 		default:
 			System.err
 					.println("Not supported or empty run mode. Only daemon, add, del and list are allowed.");
 			System.exit(-1);
 			// this return statement should never be executed ... wondering why
 			// the java compiler does not recognize ???
-			return null;
+			rm = null;
+			break;
 		}
 
+
+		if (rm == RunMode.DAEMON && pidfile == null) {
+			System.err.println("You have to provide a pidfile");
+			System.err.println();
+			printHelp(options);
+		}
+
+		return rm;
 	}
 
 	private static void printHelp(Options options) {
