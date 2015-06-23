@@ -23,5 +23,4 @@ public class Util {
 		return Integer.valueOf(ManagementFactory.getRuntimeMXBean().getName()
 				.split("@")[0]);
 	}
-
 }

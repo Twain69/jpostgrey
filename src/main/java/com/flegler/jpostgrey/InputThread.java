@@ -22,6 +22,10 @@ public class InputThread extends Thread {
 
 	private static final Logger LOG = Logger.getLogger(InputThread.class);
 
+	public static final String DEFER_EARLY_RETRY = "DEFER 4.2.0 Greylisted, early retry (%d seconds remaining). Please come back later.";
+	public static final String PASS = "DUNNO";
+	public static final String DEFER = "DEFER 4.2.0 Greylisted, please come back later.";
+
 	private final Socket socket;
 	private final UUID uuid;
 
@@ -37,12 +41,30 @@ public class InputThread extends Thread {
 
 	@Override
 	public void run() {
+
+		try (OutputStreamWriter out = new OutputStreamWriter(
+				socket.getOutputStream())) {
+			log(Priority.INFO_INT, "New incoming connection");
+
+			String resultString = findTripletAndBuildOutputRecord(createInputRecordFromSocket());
+
+			out.flush();
+			out.write(resultString);
+			out.write(String.format("%n"));
+			out.write(String.format("%n"));
+
+		} catch (IOException e) {
+			for (StackTraceElement element : e.getStackTrace()) {
+				log(Priority.ERROR_INT, element.toString());
+			}
+		}
+	}
+
+	private InputRecord createInputRecordFromSocket() throws IOException {
 		String inputString;
 		BufferedReader inFromClient = null;
-		OutputStreamWriter out = null;
 
 		try {
-			log(Priority.INFO_INT, "New incoming connection");
 			inFromClient = new BufferedReader(new InputStreamReader(
 					socket.getInputStream()));
 			InputRecordBuilder builder = new InputRecord.InputRecordBuilder();
@@ -53,39 +75,13 @@ public class InputThread extends Thread {
 					builder.addRow(inputString);
 				}
 			} while (inputString != null && !inputString.isEmpty());
-			InputRecord inputRecord = null;
-			try {
-				inputRecord = builder.build();
-				out = new OutputStreamWriter(socket.getOutputStream());
-
-				String resultString = findTripletAndBuildOutputRecord(inputRecord);
-
-				out.flush();
-
-				out.write(resultString);
-				out.write(String.format("%n"));
-				out.write(String.format("%n"));
-
-			} catch (BuilderNotCompleteException e) {
-				log(Priority.INFO_INT,
-						"Not all records received ... have to reject");
-			}
-		} catch (IOException e) {
-			for (StackTraceElement element : e.getStackTrace()) {
-				log(Priority.ERROR_INT, element.toString());
-			}
-		} finally {
-			if (out != null) {
-				try {
-					out.flush();
-					out.close();
-				} catch (IOException e) {
-					for (StackTraceElement element : e.getStackTrace()) {
-						log(Priority.ERROR_INT, element.toString());
-					}
-				}
-			}
+			return builder.build();
+		} catch (BuilderNotCompleteException e) {
+			log(Priority.INFO_INT,
+					"Not all records received ... have to reject");
 		}
+
+		return null;
 	}
 
 	public String findTripletAndBuildOutputRecord(InputRecord inputRecord) {
@@ -115,22 +111,21 @@ public class InputThread extends Thread {
 					.intValue();
 
 			if (duration >= Settings.getInstance().getGreylistingTime()) {
-				resultSB.append("DUNNO");
+				resultSB.append(PASS);
 			} else {
 				int remaining = Settings.getInstance().getGreylistingTime()
 						- duration;
-				resultSB.append("DEFER 4.2.0 Greylisted, early retry ("
-						+ remaining
-						+ " seconds remaining). Please come back later.");
+				resultSB.append(String.format(DEFER_EARLY_RETRY, remaining));
 			}
 			log(Priority.INFO_INT,
 					String.format(
-							"InputRecord found in backend. Duration since the first connect is '%d'. Current min duration: '%d'. Action: '%s'",
-							duration, Settings.getInstance()
-									.getGreylistingTime(), resultSB.toString()));
+							"InputRecord found in backend. Duration since the first connect is '%d'. Current min duration: '%d'. Action: '%s'.",
+							duration,
+					Settings.getInstance().getGreylistingTime(),
+					resultSB.toString()));
 
 		} catch (InputRecordNotFoundException e) {
-			resultSB.append("DEFER 4.2.0 Greylisted, please come back later.");
+			resultSB.append(DEFER);
 			log(Priority.INFO_INT, "This is a new InputRecord");
 		} catch (NullPointerException e) {
 			log(Priority.ERROR_INT,
@@ -168,5 +163,4 @@ public class InputThread extends Thread {
 			break;
 		}
 	}
-
 }

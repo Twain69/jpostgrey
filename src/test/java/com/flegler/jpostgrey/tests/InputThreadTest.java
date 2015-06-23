@@ -27,8 +27,7 @@ public class InputThreadTest {
 		InputRecord inputRecord = InputRecordTest.createInputRecord();
 		String result = inputThread
 				.findTripletAndBuildOutputRecord(inputRecord);
-		Assert.assertTrue(result
-				.equals("action=DEFER 4.2.0 Greylisted, please come back later."));
+		Assert.assertTrue(result.equals("action=" + InputThread.DEFER));
 
 		Thread.sleep(1000);
 
@@ -39,6 +38,6 @@ public class InputThreadTest {
 		Thread.sleep(1100);
 
 		result = inputThread.findTripletAndBuildOutputRecord(inputRecord);
-		Assert.assertTrue(result.equals("action=DUNNO"));
+		Assert.assertTrue(result.equals("action=" + InputThread.PASS));
 	}
 }
