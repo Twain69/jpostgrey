@@ -1,4 +1,5 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.flegler</groupId>
@@ -128,108 +129,123 @@
 			</plugin>
 
 
-			<plugin>
-				<groupId>org.codehaus.mojo</groupId>
-				<artifactId>rpm-maven-plugin</artifactId>
-				<version>2.1-alpha-3</version>
-				<executions>
-					<execution>
-						<id>generate-rpm</id>
-						<goals>
-							<goal>rpm</goal>
-						</goals>
-					</execution>
-				</executions>
-				<configuration>
-					<copyright>2014, flegler.com</copyright>
-					<distribution />
-					<group>Mail</group>
-					<icon>src/main/resources/icon.gif</icon>
-					<packager>SWWDC</packager>
-					<prefix>/usr/share</prefix>
-					<changelogFile>src/changelog</changelogFile>
-					<defineStatements>
-						<defineStatement>_unpackaged_files_terminate_build 0</defineStatement>
-					</defineStatements>
-					<mappings>
-						<mapping>
-							<directory>/usr/share/jpostgrey/</directory>
-							<filemode>440</filemode>
-							<username>root</username>
-							<groupname>root</groupname>
-							<sources>
-								<source>
-									<location>target/jpostgrey.jar</location>
-								</source>
-							</sources>
-						</mapping>
-						<mapping>
-							<directory>/usr/bin/</directory>
-							<filemode>770</filemode>
-							<username>root</username>
-							<groupname>root</groupname>
-							<directoryIncluded>false</directoryIncluded>
-							<sources>
-								<source>
-									<location>src/main/resources/sh/jpostgrey</location>
-								</source>
-							</sources>
-						</mapping>
-						<mapping>
-							<directory>/usr/share/jpostgrey/sql/</directory>
-							<filemode>440</filemode>
-							<username>root</username>
-							<groupname>root</groupname>
-							<sources>
-								<source>
-									<location>src/main/resources/sql/</location>
-								</source>
-							</sources>
-						</mapping>
-						<mapping>
-							<directory>/etc/init.d/</directory>
-							<directoryIncluded>false</directoryIncluded>
-							<filemode>770</filemode>
-							<username>root</username>
-							<groupname>root</groupname>
-							<sources>
-								<source>
-									<location>src/main/resources/init.d/jpostgrey</location>
-									<destination>jpostgrey</destination>
-								</source>
-							</sources>
-						</mapping>
-						<mapping>
-							<directory>/etc/</directory>
-							<directoryIncluded>false</directoryIncluded>
-							<filemode>770</filemode>
-							<username>root</username>
-							<groupname>root</groupname>
-							<configuration>true</configuration>
-							<sources>
-								<source>
-									<location>data/jpostgrey.conf</location>
-									<destination>jpostgrey.conf.sample</destination>
-								</source>
-							</sources>
-						</mapping>
-						<mapping>
-							<directory>/var/run/jpostgrey</directory>
-							<filemode>770</filemode>
-							<username>root</username>
-							<groupname>root</groupname>
-						</mapping>
-						<mapping>
-							<directory>/var/log/jpostgrey</directory>
-							<filemode>770</filemode>
-							<username>root</username>
-							<groupname>root</groupname>
-						</mapping>
-					</mappings>
-				</configuration>
-			</plugin>
 
 		</plugins>
 	</build>
+
+	<profiles>
+		<profile>
+			<id>buildrpm</id>
+			<activation>
+				<activeByDefault>false</activeByDefault>
+			</activation>
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>org.codehaus.mojo</groupId>
+						<artifactId>rpm-maven-plugin</artifactId>
+						<version>2.1-alpha-3</version>
+						<executions>
+							<execution>
+								<id>generate-rpm</id>
+								<goals>
+									<goal>rpm</goal>
+								</goals>
+							</execution>
+						</executions>
+						<configuration>
+							<copyright>2014, flegler.com</copyright>
+							<distribution />
+							<group>Mail</group>
+							<icon>src/main/resources/icon.gif</icon>
+							<packager>SWWDC</packager>
+							<prefix>/usr/share</prefix>
+							<changelogFile>src/changelog</changelogFile>
+							<defineStatements>
+								<defineStatement>_unpackaged_files_terminate_build 0</defineStatement>
+							</defineStatements>
+							<mappings>
+								<mapping>
+									<directory>/usr/share/jpostgrey/</directory>
+									<filemode>440</filemode>
+									<username>root</username>
+									<groupname>root</groupname>
+									<sources>
+										<source>
+											<location>target/jpostgrey.jar</location>
+										</source>
+									</sources>
+								</mapping>
+								<mapping>
+									<directory>/usr/bin/</directory>
+									<filemode>770</filemode>
+									<username>root</username>
+									<groupname>root</groupname>
+									<directoryIncluded>false</directoryIncluded>
+									<sources>
+										<source>
+											<location>src/main/resources/sh/jpostgrey</location>
+										</source>
+									</sources>
+								</mapping>
+								<mapping>
+									<directory>/usr/share/jpostgrey/sql/</directory>
+									<filemode>440</filemode>
+									<username>root</username>
+									<groupname>root</groupname>
+									<sources>
+										<source>
+											<location>src/main/resources/sql/</location>
+										</source>
+									</sources>
+								</mapping>
+								<mapping>
+									<directory>/etc/init.d/</directory>
+									<directoryIncluded>false</directoryIncluded>
+									<filemode>770</filemode>
+									<username>root</username>
+									<groupname>root</groupname>
+									<sources>
+										<source>
+											<location>src/main/resources/init.d/jpostgrey</location>
+											<destination>jpostgrey</destination>
+										</source>
+									</sources>
+								</mapping>
+								<mapping>
+									<directory>/etc/</directory>
+									<directoryIncluded>false</directoryIncluded>
+									<filemode>770</filemode>
+									<username>root</username>
+									<groupname>root</groupname>
+									<configuration>true</configuration>
+									<sources>
+										<source>
+											<location>data/jpostgrey.conf</location>
+											<destination>jpostgrey.conf.sample</destination>
+										</source>
+									</sources>
+								</mapping>
+								<mapping>
+									<directory>/var/run/jpostgrey</directory>
+									<filemode>770</filemode>
+									<username>root</username>
+									<groupname>root</groupname>
+								</mapping>
+								<mapping>
+									<directory>/var/log/jpostgrey</directory>
+									<filemode>770</filemode>
+									<username>root</username>
+									<groupname>root</groupname>
+								</mapping>
+							</mappings>
+						</configuration>
+					</plugin>
+
+				</plugins>
+			</build>
+		</profile>
+	</profiles>
+
 
 </project>
