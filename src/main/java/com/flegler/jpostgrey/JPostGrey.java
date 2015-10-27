@@ -39,21 +39,14 @@ public class JPostGrey {
 			// default mode ... nothing to be done here, just go on
 			break;
 		case ADD_WHITELIST:
-			Settings.INSTANCE
-					.getDataFetcherInstance()
-					.addEntryToWhitelist(
-Settings.INSTANCE.getAddDelWhiteListEntry());
+			Settings.INSTANCE.getDataFetcherInstance().addEntryToWhitelist(Settings.INSTANCE.getAddDelWhiteListEntry());
 			System.exit(0);
 		case DEL_WHITELIST:
-			Settings.INSTANCE
-					.getDataFetcherInstance()
-					.removeEntryFromWhitelist(
-Settings.INSTANCE.getAddDelWhiteListEntry()
-									.getPattern());
+			Settings.INSTANCE.getDataFetcherInstance()
+					.removeEntryFromWhitelist(Settings.INSTANCE.getAddDelWhiteListEntry().getPattern());
 			System.exit(0);
 		case LIST_WHITELIST:
-			printWhitelistEntries(Settings.INSTANCE
-					.getDataFetcherInstance().getAllWhitelistEntries());
+			printWhitelistEntries(Settings.INSTANCE.getDataFetcherInstance().getAllWhitelistEntries());
 			System.exit(0);
 		}
 		writePid();
@@ -61,14 +54,11 @@ Settings.INSTANCE.getAddDelWhiteListEntry()
 		Util util = new Util();
 		LOG.info("jPostgrey started. Version: " + util.getVersion());
 
-		SettingsReloader settingsReloader = new SettingsReloader();
-		settingsReloader.start();
-
 		ServerSocket inputSocket = null;
 		try {
-			inputSocket = new ServerSocket(Settings.INSTANCE.getPort(), 0, Settings.INSTANCE.getBindAddress());
-			LOG.info("Socket started successfully on port "
- + Settings.INSTANCE.getPort());
+			inputSocket = new ServerSocket(Settings.INSTANCE.getConfig().port(), 0,
+					Settings.INSTANCE.getConfig().bindAddress());
+			LOG.info("Socket started successfully on port " + Settings.INSTANCE.getConfig().port());
 		} catch (IOException e) {
 			e.printStackTrace();
 			System.exit(-1);
@@ -77,8 +67,7 @@ Settings.INSTANCE.getAddDelWhiteListEntry()
 		while (true) {
 			try {
 				Socket connectionSocket = inputSocket.accept();
-				InputThread input = new InputThread(connectionSocket,
-						UUID.randomUUID());
+				InputThread input = new InputThread(connectionSocket, UUID.randomUUID());
 				input.start();
 			} catch (IOException e) {
 				for (StackTraceElement element : e.getStackTrace()) {
@@ -100,20 +89,11 @@ Settings.INSTANCE.getAddDelWhiteListEntry()
 		options.addOption("h", "help", false, "Print this description");
 		options.addOption("c", "configFile", true, "Config file");
 		options.addOption("p", "pidfile", true, "pid file");
-		options.addOption(
-				"r",
-				"runmode",
-				true,
+		options.addOption("r", "runmode", true,
 				"Run Mode (daemon, add [add whitelist entry], del [del whitelist entry], list [list all whitelist entries])");
-		options.addOption(
-				"m",
-				"pattern",
-				true,
+		options.addOption("m", "pattern", true,
 				"When adding a new or deleting an existing whitelist entry, this is the pattern (e.g. flegler.com)");
-		options.addOption(
-				"k",
-				"comment",
-				true,
+		options.addOption("k", "comment", true,
 				"When adding a new whitelist entry, this is the comment (e.g. 'tired of waiting for mail to arrive')");
 
 		CommandLineParser parser = new GnuParser();
@@ -122,8 +102,7 @@ Settings.INSTANCE.getAddDelWhiteListEntry()
 		try {
 			cmd = parser.parse(options, args);
 		} catch (ParseException e) {
-			System.err.println("Error while parsing the arguments ("
-					+ e.getLocalizedMessage() + ")");
+			System.err.println("Error while parsing the arguments (" + e.getLocalizedMessage() + ")");
 			System.err.println(e);
 			System.exit(-1);
 		}
@@ -146,8 +125,6 @@ Settings.INSTANCE.getAddDelWhiteListEntry()
 		}
 
 		try {
-			Settings.INSTANCE.setConfigFile(new File(configFile));
-			Settings.INSTANCE.readConfig();
 			Settings.INSTANCE.setPidFileName(pidfile);
 		} catch (NullPointerException e) {
 			System.err.println("Error while parsing the config file");
@@ -169,19 +146,16 @@ Settings.INSTANCE.getAddDelWhiteListEntry()
 			break;
 		case "ADD":
 			if (StringUtils.isEmpty(pattern) || StringUtils.isEmpty(comment)) {
-				System.err
-						.println("You have to provide a pattern and comment to add a new entry");
+				System.err.println("You have to provide a pattern and comment to add a new entry");
 				printHelp(options);
 				System.exit(-1);
 			}
-			Settings.INSTANCE.setAddDelWhiteListEntry(new WhiteListEntry(pattern,
-					comment));
+			Settings.INSTANCE.setAddDelWhiteListEntry(new WhiteListEntry(pattern, comment));
 			rm = RunMode.ADD_WHITELIST;
 			break;
 		case "DEL":
 			if (StringUtils.isEmpty(pattern)) {
-				System.err
-						.println("You have to provide a pattern to delete an existing entry");
+				System.err.println("You have to provide a pattern to delete an existing entry");
 				printHelp(options);
 				System.exit(-1);
 			}
@@ -192,15 +166,13 @@ Settings.INSTANCE.getAddDelWhiteListEntry()
 			rm = RunMode.LIST_WHITELIST;
 			break;
 		default:
-			System.err
-					.println("Not supported or empty run mode. Only daemon, add, del and list are allowed.");
+			System.err.println("Not supported or empty run mode. Only daemon, add, del and list are allowed.");
 			System.exit(-1);
 			// this return statement should never be executed ... wondering why
 			// the java compiler does not recognize ???
 			rm = null;
 			break;
 		}
-
 
 		if (rm == RunMode.DAEMON && pidfile == null) {
 			System.err.println("You have to provide a pidfile");
@@ -229,9 +201,8 @@ Settings.INSTANCE.getAddDelWhiteListEntry()
 				fw = new FileWriter(pidFile);
 				fw.write(pid.toString());
 			} else {
-				throw new IOException(String.format(
-						"Can not write to pidFile '%s'", Settings.INSTANCE
-								.getPidFileName()));
+				throw new IOException(
+						String.format("Can not write to pidFile '%s'", Settings.INSTANCE.getPidFileName()));
 			}
 		} catch (NumberFormatException e) {
 			System.err.println("Could not determine the process id");
@@ -255,9 +226,8 @@ Settings.INSTANCE.getAddDelWhiteListEntry()
 		System.out.println("Number of entries found: " + entries.size());
 		int count = 1;
 		for (WhiteListEntry entry : entries) {
-			System.out.print(String.format(
-					"%-3d: Pattern: %s%n     Comment: %s", count++,
-					entry.getPattern(), entry.getComment()));
+			System.out.print(String.format("%-3d: Pattern: %s%n     Comment: %s", count++, entry.getPattern(),
+					entry.getComment()));
 
 		}
 	}

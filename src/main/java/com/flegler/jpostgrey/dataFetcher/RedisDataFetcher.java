@@ -5,13 +5,13 @@ import java.sql.SQLException;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 
-import redis.clients.jedis.Jedis;
-
 import com.flegler.jpostgrey.Settings;
 import com.flegler.jpostgrey.exception.InputRecordNotFoundException;
 import com.flegler.jpostgrey.interfaces.DataFetcher;
 import com.flegler.jpostgrey.model.InputRecord;
 import com.google.gson.Gson;
+
+import redis.clients.jedis.Jedis;
 
 /**
  * <pre>
@@ -45,14 +45,14 @@ public class RedisDataFetcher implements DataFetcher {
 	}
 
 	@Override
-	public void setUp(Settings settings) {
-		if (StringUtils.isEmpty(settings.getRedisHost())
-				|| settings.getRedisPort() == null
-				|| settings.getRedisPort() <= 0) {
+	public void setUp() {
+		if (StringUtils.isEmpty(Settings.INSTANCE.getConfig().redisHost())
+				|| Settings.INSTANCE.getConfig().redisPort() == null
+				|| Settings.INSTANCE.getConfig().redisPort() <= 0) {
 			LOG.error("RedisFetcher not set up properly");
 			System.exit(1);
 		}
-		jedis = new Jedis(settings.getRedisHost(), settings.getRedisPort());
+		jedis = new Jedis(Settings.INSTANCE.getConfig().redisHost(), Settings.INSTANCE.getConfig().redisPort());
 	}
 
 	private Long getGreylistedData(InputRecord inputRecord)

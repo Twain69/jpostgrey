@@ -39,8 +39,7 @@ public class DatabaseDataFetcher implements DataFetcher {
 	}
 
 	@Override
-	public FetcherResult getResult(InputRecord inputRecord)
-			throws InputRecordNotFoundException {
+	public FetcherResult getResult(InputRecord inputRecord) throws InputRecordNotFoundException {
 		FetcherResult result = new FetcherResult();
 		try {
 			if (isInWhiteList(inputRecord)) {
@@ -59,8 +58,7 @@ public class DatabaseDataFetcher implements DataFetcher {
 	private Connection connect() throws SQLException {
 		// set up connection to database
 		StringBuffer sb = new StringBuffer();
-		sb.append("jdbc:").append(type).append("://").append(host).append("/")
-				.append(dbName);
+		sb.append("jdbc:").append(type).append("://").append(host).append("/").append(dbName);
 		Properties props = new Properties();
 		props.setProperty("user", user);
 		props.setProperty("password", password);
@@ -68,15 +66,13 @@ public class DatabaseDataFetcher implements DataFetcher {
 	}
 
 	private boolean isInWhiteList(InputRecord inputRecord) throws SQLException {
-		PreparedStatement stmt = connection
-				.prepareStatement("SELECT pattern, comment FROM whitelist");
+		PreparedStatement stmt = connection.prepareStatement("SELECT pattern, comment FROM whitelist");
 		ResultSet result = stmt.executeQuery();
 		if (result != null) {
 			while (result.next()) {
 				String pattern = ".*" + result.getString("pattern") + ".*";
 
-				if (inputRecord.getRecipient().matches(pattern)
-						|| inputRecord.getSender().matches(pattern)) {
+				if (inputRecord.getRecipient().matches(pattern) || inputRecord.getSender().matches(pattern)) {
 					return true;
 				}
 			}
@@ -84,10 +80,9 @@ public class DatabaseDataFetcher implements DataFetcher {
 		return false;
 	}
 
-	private Long getGreylistedData(InputRecord inputRecord)
-			throws SQLException, InputRecordNotFoundException {
-		PreparedStatement stmt = connection
-				.prepareStatement("SELECT firstconnect FROM greylist WHERE clientaddress = ? AND sender = ? AND recipient = ?");
+	private Long getGreylistedData(InputRecord inputRecord) throws SQLException, InputRecordNotFoundException {
+		PreparedStatement stmt = connection.prepareStatement(
+				"SELECT firstconnect FROM greylist WHERE clientaddress = ? AND sender = ? AND recipient = ?");
 		stmt.setString(1, inputRecord.getClientAddress().getHostAddress());
 		stmt.setString(2, inputRecord.getSender().toLowerCase());
 		stmt.setString(3, inputRecord.getRecipient().toLowerCase());
@@ -115,8 +110,8 @@ public class DatabaseDataFetcher implements DataFetcher {
 	}
 
 	private void insertInputRecord(InputRecord inputRecord) throws SQLException {
-		PreparedStatement stmt = connection
-				.prepareStatement("INSERT INTO greylist (firstconnect, lastconnect, connectcount, clientaddress, sender, recipient) VALUES (?, ?, ?, ?, ?, ?)");
+		PreparedStatement stmt = connection.prepareStatement(
+				"INSERT INTO greylist (firstconnect, lastconnect, connectcount, clientaddress, sender, recipient) VALUES (?, ?, ?, ?, ?, ?)");
 		Timestamp now = new Timestamp(new GregorianCalendar().getTimeInMillis());
 		stmt.setTimestamp(1, now);
 		stmt.setTimestamp(2, now);
@@ -127,10 +122,9 @@ public class DatabaseDataFetcher implements DataFetcher {
 		stmt.executeUpdate();
 	}
 
-	private void updateRecordInDatabase(InputRecord inputRecord)
-			throws SQLException {
-		PreparedStatement stmt = connection
-				.prepareStatement("UPDATE greylist SET lastconnect = ?, connectcount = connectcount+1 WHERE clientaddress = ? AND sender = ? AND recipient = ?");
+	private void updateRecordInDatabase(InputRecord inputRecord) throws SQLException {
+		PreparedStatement stmt = connection.prepareStatement(
+				"UPDATE greylist SET lastconnect = ?, connectcount = connectcount+1 WHERE clientaddress = ? AND sender = ? AND recipient = ?");
 		Timestamp now = new Timestamp(new GregorianCalendar().getTimeInMillis());
 		stmt.setTimestamp(1, now);
 		stmt.setString(2, inputRecord.getClientAddress().getHostAddress());
@@ -140,9 +134,9 @@ public class DatabaseDataFetcher implements DataFetcher {
 	}
 
 	@Override
-	public void setUp(Settings settings) {
-		if (!settings.getDataFetcherDBType().equals("postgresql")
-				&& !settings.getDataFetcherDBType().equals("mysql")) {
+	public void setUp() {
+		if (!Settings.INSTANCE.getConfig().dataFetcherDBType().equals("postgresql")
+				&& !Settings.INSTANCE.getConfig().dataFetcherDBType().equals("mysql")) {
 			String errorMessage = "Wrong parameter provided for database type. "
 					+ "Only 'postgresql' and 'mysql' is allowed.";
 			LOG.error(errorMessage);
@@ -150,18 +144,17 @@ public class DatabaseDataFetcher implements DataFetcher {
 			System.exit(1);
 		}
 
-		type = settings.getDataFetcherDBType();
-		host = settings.getDataFetcherDBHost();
-		dbName = settings.getDataFetcherDBName();
-		user = settings.getDataFetcherDBUser();
-		password = settings.getDataFetcherDBPassword();
+		type = Settings.INSTANCE.getConfig().dataFetcherDBType();
+		host = Settings.INSTANCE.getConfig().dataFetcherDBHost();
+		dbName = Settings.INSTANCE.getConfig().dataFetcherDBName();
+		user = Settings.INSTANCE.getConfig().dataFetcherDBUser();
+		password = Settings.INSTANCE.getConfig().dataFetcherDBPassword();
 
 		try {
 			connection = connect();
 			LOG.info("Connection to database succeeded.");
 		} catch (SQLException e) {
-			LOG.error("An error occured during initialization of the database connection: "
-					+ e.getLocalizedMessage());
+			LOG.error("An error occured during initialization of the database connection: " + e.getLocalizedMessage());
 			System.exit(1);
 		}
 	}
@@ -171,14 +164,11 @@ public class DatabaseDataFetcher implements DataFetcher {
 		PreparedStatement stmt;
 		List<WhiteListEntry> whiteListEntries = new ArrayList<WhiteListEntry>();
 		try {
-			stmt = connection
-					.prepareStatement("SELECT pattern, comment FROM whitelist");
+			stmt = connection.prepareStatement("SELECT pattern, comment FROM whitelist");
 			ResultSet result = stmt.executeQuery();
 			if (result != null) {
 				while (result.next()) {
-					WhiteListEntry entry = new WhiteListEntry(
-							result.getString("pattern"),
-							result.getString("comment"));
+					WhiteListEntry entry = new WhiteListEntry(result.getString("pattern"), result.getString("comment"));
 					whiteListEntries.add(entry);
 				}
 			}
@@ -194,8 +184,7 @@ public class DatabaseDataFetcher implements DataFetcher {
 	public void addEntryToWhitelist(WhiteListEntry whiteListEntry) {
 		PreparedStatement stmt;
 		try {
-			stmt = connection
-					.prepareStatement("INSERT INTO whitelist (pattern, comment) VALUES ?, ?");
+			stmt = connection.prepareStatement("INSERT INTO whitelist (pattern, comment) VALUES ?, ?");
 			stmt.setString(1, whiteListEntry.getPattern());
 			stmt.setString(2, whiteListEntry.getComment());
 			int resultCount = stmt.executeUpdate();
@@ -206,8 +195,7 @@ public class DatabaseDataFetcher implements DataFetcher {
 				if (resultCount > 0) {
 					System.out.println("Whitelist entry successfully inserted");
 				} else {
-					System.out
-							.println("No entry inserted (maybe the entry already existed)");
+					System.out.println("No entry inserted (maybe the entry already existed)");
 				}
 			}
 		} catch (SQLException e) {
@@ -220,8 +208,7 @@ public class DatabaseDataFetcher implements DataFetcher {
 	public void removeEntryFromWhitelist(String pattern) {
 		PreparedStatement stmt;
 		try {
-			stmt = connection
-					.prepareStatement("DELETE FROM whitelist WHERE pattern LIKE '?'");
+			stmt = connection.prepareStatement("DELETE FROM whitelist WHERE pattern LIKE '?'");
 			stmt.setString(1, pattern);
 			int resultCount = stmt.executeUpdate();
 
@@ -229,8 +216,7 @@ public class DatabaseDataFetcher implements DataFetcher {
 				System.err.println("Error while deleting whitelist entry");
 			} else {
 				if (resultCount > 0) {
-					System.out.println(resultCount
-							+ " entries deleted from whitelist");
+					System.out.println(resultCount + " entries deleted from whitelist");
 				} else {
 					System.out.println("No entry deleted");
 				}

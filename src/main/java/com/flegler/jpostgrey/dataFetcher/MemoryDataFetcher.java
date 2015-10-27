@@ -7,7 +7,6 @@ import java.util.concurrent.Semaphore;
 
 import org.apache.log4j.Logger;
 
-import com.flegler.jpostgrey.Settings;
 import com.flegler.jpostgrey.exception.InputRecordNotFoundException;
 import com.flegler.jpostgrey.interfaces.DataFetcher;
 import com.flegler.jpostgrey.model.InputRecord;
@@ -95,7 +94,7 @@ public class MemoryDataFetcher implements DataFetcher {
 	}
 
 	@Override
-	public void setUp(Settings settings) {
+	public void setUp() {
 		// this is left empty intentionally, since it is not needed here
 	}
 

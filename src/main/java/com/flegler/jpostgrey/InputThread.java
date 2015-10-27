@@ -109,10 +109,10 @@ public class InputThread extends Thread {
 					((new Date()).getTime() - result.getFirstConnect()) / 1000)
 					.intValue();
 
-			if (duration >= Settings.INSTANCE.getGreylistingTime()) {
+			if (duration >= Settings.INSTANCE.getConfig().greylistingTime()) {
 				resultSB.append(PASS);
 			} else {
-				int remaining = Settings.INSTANCE.getGreylistingTime()
+				int remaining = Settings.INSTANCE.getConfig().greylistingTime()
 						- duration;
 				resultSB.append(String.format(DEFER_EARLY_RETRY, remaining));
 			}
@@ -120,7 +120,7 @@ public class InputThread extends Thread {
 					String.format(
 							"InputRecord found in backend. Duration since the first connect is '%d'. Current min duration: '%d'. Action: '%s'.",
 							duration,
-					Settings.INSTANCE.getGreylistingTime(),
+					Settings.INSTANCE.getConfig().greylistingTime(),
 					resultSB.toString()));
 
 		} catch (InputRecordNotFoundException e) {
