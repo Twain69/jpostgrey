@@ -39,20 +39,20 @@ public class JPostGrey {
 			// default mode ... nothing to be done here, just go on
 			break;
 		case ADD_WHITELIST:
-			Settings.getInstance()
+			Settings.INSTANCE
 					.getDataFetcherInstance()
 					.addEntryToWhitelist(
-							Settings.getInstance().getAddDelWhiteListEntry());
+Settings.INSTANCE.getAddDelWhiteListEntry());
 			System.exit(0);
 		case DEL_WHITELIST:
-			Settings.getInstance()
+			Settings.INSTANCE
 					.getDataFetcherInstance()
 					.removeEntryFromWhitelist(
-							Settings.getInstance().getAddDelWhiteListEntry()
+Settings.INSTANCE.getAddDelWhiteListEntry()
 									.getPattern());
 			System.exit(0);
 		case LIST_WHITELIST:
-			printWhitelistEntries(Settings.getInstance()
+			printWhitelistEntries(Settings.INSTANCE
 					.getDataFetcherInstance().getAllWhitelistEntries());
 			System.exit(0);
 		}
@@ -66,10 +66,9 @@ public class JPostGrey {
 
 		ServerSocket inputSocket = null;
 		try {
-			inputSocket = new ServerSocket(Settings.getInstance().getPort(), 0,
-					Settings.getInstance().getBindAddress());
+			inputSocket = new ServerSocket(Settings.INSTANCE.getPort(), 0, Settings.INSTANCE.getBindAddress());
 			LOG.info("Socket started successfully on port "
-					+ Settings.getInstance().getPort());
+ + Settings.INSTANCE.getPort());
 		} catch (IOException e) {
 			e.printStackTrace();
 			System.exit(-1);
@@ -137,8 +136,6 @@ public class JPostGrey {
 		String comment = cmd.getOptionValue("k");
 		RunMode rm;
 
-		Settings settings = Settings.getInstance();
-
 		if (help) {
 			printHelp(options);
 		}
@@ -149,9 +146,9 @@ public class JPostGrey {
 		}
 
 		try {
-			settings.setConfigFile(new File(configFile));
-			settings.readConfig();
-			settings.setPidFileName(pidfile);
+			Settings.INSTANCE.setConfigFile(new File(configFile));
+			Settings.INSTANCE.readConfig();
+			Settings.INSTANCE.setPidFileName(pidfile);
 		} catch (NullPointerException e) {
 			System.err.println("Error while parsing the config file");
 			if (e.getMessage() != null) {
@@ -177,7 +174,7 @@ public class JPostGrey {
 				printHelp(options);
 				System.exit(-1);
 			}
-			settings.setAddDelWhiteListEntry(new WhiteListEntry(pattern,
+			Settings.INSTANCE.setAddDelWhiteListEntry(new WhiteListEntry(pattern,
 					comment));
 			rm = RunMode.ADD_WHITELIST;
 			break;
@@ -188,7 +185,7 @@ public class JPostGrey {
 				printHelp(options);
 				System.exit(-1);
 			}
-			settings.setAddDelWhiteListEntry(new WhiteListEntry(pattern, null));
+			Settings.INSTANCE.setAddDelWhiteListEntry(new WhiteListEntry(pattern, null));
 			rm = RunMode.DEL_WHITELIST;
 			break;
 		case "LIST":
@@ -224,7 +221,7 @@ public class JPostGrey {
 		FileWriter fw = null;
 		try {
 			Integer pid = Util.getPid();
-			File pidFile = new File(Settings.getInstance().getPidFileName());
+			File pidFile = new File(Settings.INSTANCE.getPidFileName());
 			if (!pidFile.exists()) {
 				pidFile.createNewFile();
 			}
@@ -233,7 +230,7 @@ public class JPostGrey {
 				fw.write(pid.toString());
 			} else {
 				throw new IOException(String.format(
-						"Can not write to pidFile '%s'", Settings.getInstance()
+						"Can not write to pidFile '%s'", Settings.INSTANCE
 								.getPidFileName()));
 			}
 		} catch (NumberFormatException e) {

@@ -5,18 +5,15 @@ import org.junit.Before;
 import org.junit.Test;
 
 import com.flegler.jpostgrey.InputThread;
-import com.flegler.jpostgrey.Settings;
 import com.flegler.jpostgrey.model.InputRecord;
 
 public class InputThreadTest {
 
-	Settings settings = null;
 	InputThread inputThread;
 
 	@Before
 	public void setup() {
 		Preparation.createMemoryFetcherSettings();
-		settings = Settings.getInstance();
 	}
 
 	@Test

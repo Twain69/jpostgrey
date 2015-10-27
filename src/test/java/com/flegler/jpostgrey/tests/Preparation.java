@@ -16,9 +16,8 @@ public class Preparation {
 
 	public static void createMemoryFetcherSettings() {
 		System.out.println("Creating new Settings class");
-		Settings settings = Settings.getInstance();
-		settings.setConfigFile(createConfigFile());
-		settings.readConfig();
+		Settings.INSTANCE.setConfigFile(createConfigFile());
+		Settings.INSTANCE.readConfig();
 		System.out.println("Creation of Settings class finished");
 	}
 

@@ -17,11 +17,11 @@ import org.apache.log4j.Logger;
 import com.flegler.jpostgrey.interfaces.DataFetcher;
 import com.flegler.jpostgrey.model.WhiteListEntry;
 
-public class Settings {
+public enum Settings {
+	INSTANCE;
 
 	private static final Logger LOG = Logger.getLogger(Settings.class);
 
-	private static Settings instance;
 	private Integer port;
 	private InetAddress bindAddress;
 	private Long configFileLastModified;
@@ -49,13 +49,6 @@ public class Settings {
 	private Settings() {
 	}
 
-	public static Settings getInstance() {
-		if (instance == null) {
-			instance = new Settings();
-		}
-
-		return instance;
-	}
 
 	public void readConfig() {
 		if (configFile == null) {
@@ -189,7 +182,7 @@ public class Settings {
 						.getConstructor();
 				this.dataFetcherInstance = constructor.newInstance();
 				Method method = dataClass.getMethod("setUp", Settings.class);
-				method.invoke(this.dataFetcherInstance, Settings.getInstance());
+				method.invoke(this.dataFetcherInstance, Settings.INSTANCE);
 			} catch (ClassNotFoundException | IllegalAccessException
 					| IllegalArgumentException | InvocationTargetException
 					| NoSuchMethodException | SecurityException

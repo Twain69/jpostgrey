@@ -12,7 +12,7 @@ public class SettingsReloader extends Thread {
 			try {
 				Thread.sleep(1 * 30 * 1000); // run every 30 seconds
 				LOG.debug("Parsing config file again");
-				Settings.getInstance().readConfig();
+				Settings.INSTANCE.readConfig();
 			} catch (InterruptedException e) {
 			}
 		}

@@ -12,14 +12,12 @@ import com.flegler.jpostgrey.model.InputRecord;
 public class MemoryDataFetcherTest {
 
 	DataFetcher fetcher = null;
-	Settings settings = null;
 
 	@Before
 	public void setup() {
 		fetcher = new MemoryDataFetcher();
 		Preparation.createMemoryFetcherSettings();
-		settings = Settings.getInstance();
-		fetcher.setUp(settings);
+		fetcher.setUp(Settings.INSTANCE);
 	}
 
 	@Test(expected = InputRecordNotFoundException.class)

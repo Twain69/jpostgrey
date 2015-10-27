@@ -94,8 +94,7 @@ public class InputThread extends Thread {
 						inputRecord.getClientAddress().getHostAddress()));
 
 		try {
-			Settings settings = Settings.getInstance();
-			DataFetcher fetcher = settings.getDataFetcherInstance();
+			DataFetcher fetcher = Settings.INSTANCE.getDataFetcherInstance();
 
 			FetcherResult result = fetcher.getResult(inputRecord);
 
@@ -110,10 +109,10 @@ public class InputThread extends Thread {
 					((new Date()).getTime() - result.getFirstConnect()) / 1000)
 					.intValue();
 
-			if (duration >= Settings.getInstance().getGreylistingTime()) {
+			if (duration >= Settings.INSTANCE.getGreylistingTime()) {
 				resultSB.append(PASS);
 			} else {
-				int remaining = Settings.getInstance().getGreylistingTime()
+				int remaining = Settings.INSTANCE.getGreylistingTime()
 						- duration;
 				resultSB.append(String.format(DEFER_EARLY_RETRY, remaining));
 			}
@@ -121,7 +120,7 @@ public class InputThread extends Thread {
 					String.format(
 							"InputRecord found in backend. Duration since the first connect is '%d'. Current min duration: '%d'. Action: '%s'.",
 							duration,
-					Settings.getInstance().getGreylistingTime(),
+					Settings.INSTANCE.getGreylistingTime(),
 					resultSB.toString()));
 
 		} catch (InputRecordNotFoundException e) {
