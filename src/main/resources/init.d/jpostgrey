@@ -14,7 +14,8 @@
 
 prog=jpostgrey
 
-export PIDFILE=/var/run/jpostgrey/jpostgrey.pid
+export PIDFILE_DIR=/var/run/jpostgrey
+export PIDFILE=$PIDFILE_DIR/jpostgrey.pid
 export CONFIGFILE=/etc/jpostgrey.conf
 
 OPTIONS="-r DAEMON"
@@ -27,6 +28,7 @@ start()
         [ -f $CONFIFILE ] || exit 6
 
         echo -n $"Starting $prog: "
+        mkdir $PIDFILE_DIR
         $JPOSTGREY $OPTIONS >/dev/null 2>/dev/null
         pid=$(cat ${PIDFILE})
         if [[ $(ps auxwww | grep ${pid} | grep -v grep | wc -l) > 0 ]]; then
