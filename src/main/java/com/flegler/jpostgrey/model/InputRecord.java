@@ -7,6 +7,11 @@ import org.apache.log4j.Logger;
 
 import com.flegler.jpostgrey.exception.BuilderNotCompleteException;
 
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+
+@Getter
+@EqualsAndHashCode
 public class InputRecord {
 
 	private static final Logger LOG = Logger.getLogger(InputRecord.class);
@@ -71,61 +76,10 @@ public class InputRecord {
 		}
 	}
 
-	public Inet4Address getClientAddress() {
-		return clientAddress;
-	}
-
-	public String getSender() {
-		return sender;
-	}
-
-	public String getRecipient() {
-		return recipient;
-	}
-
 	@Override
 	public String toString() {
     return "InputRecord [clientAddress=" + clientAddress.getHostAddress() + ", sender="
 				+ sender + ", recipient=" + recipient + "]";
-	}
-
-	@Override
-	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result
-				+ ((clientAddress == null) ? 0 : clientAddress.hashCode());
-		result = prime * result
-				+ ((recipient == null) ? 0 : recipient.hashCode());
-		result = prime * result + ((sender == null) ? 0 : sender.hashCode());
-		return result;
-	}
-
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		InputRecord other = (InputRecord) obj;
-		if (clientAddress == null) {
-			if (other.clientAddress != null)
-				return false;
-		} else if (!clientAddress.equals(other.clientAddress))
-			return false;
-		if (recipient == null) {
-			if (other.recipient != null)
-				return false;
-		} else if (!recipient.equals(other.recipient))
-			return false;
-		if (sender == null) {
-			if (other.sender != null)
-				return false;
-		} else if (!sender.equals(other.sender))
-			return false;
-		return true;
 	}
 
 }
