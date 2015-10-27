@@ -3,9 +3,11 @@ package com.flegler.jpostgrey.interfaces;
 import java.net.InetAddress;
 
 import org.aeonbits.owner.Config.HotReload;
+import org.aeonbits.owner.Config.Sources;
 import org.aeonbits.owner.Mutable;
 
 @HotReload(2)
+@Sources({ "file:/etc/jpostgrey.conf" })
 public interface Conf extends Mutable {
 	@Key("application.main.port")
 	@DefaultValue("9989")

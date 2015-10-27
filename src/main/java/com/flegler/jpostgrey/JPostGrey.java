@@ -87,7 +87,6 @@ public class JPostGrey {
 
 		Options options = new Options();
 		options.addOption("h", "help", false, "Print this description");
-		options.addOption("c", "configFile", true, "Config file");
 		options.addOption("p", "pidfile", true, "pid file");
 		options.addOption("r", "runmode", true,
 				"Run Mode (daemon, add [add whitelist entry], del [del whitelist entry], list [list all whitelist entries])");
@@ -109,7 +108,6 @@ public class JPostGrey {
 
 		Boolean help = cmd.hasOption("h");
 		String pidfile = cmd.getOptionValue("p");
-		String configFile = cmd.getOptionValue("c");
 		String runmode = cmd.getOptionValue("r");
 		String pattern = cmd.getOptionValue("m");
 		String comment = cmd.getOptionValue("k");
@@ -117,11 +115,6 @@ public class JPostGrey {
 
 		if (help) {
 			printHelp(options);
-		}
-
-		if (configFile == null) {
-			// set the default config file
-			configFile = DEFAULT_CONFIG_FILE;
 		}
 
 		try {
