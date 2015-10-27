@@ -7,6 +7,7 @@ import java.lang.reflect.Method;
 import org.aeonbits.owner.ConfigFactory;
 import org.apache.log4j.Logger;
 
+import com.flegler.jpostgrey.interfaces.Conf;
 import com.flegler.jpostgrey.interfaces.DataFetcher;
 import com.flegler.jpostgrey.model.WhiteListEntry;
 

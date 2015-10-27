@@ -1,4 +1,4 @@
-package com.flegler.jpostgrey;
+package com.flegler.jpostgrey.interfaces;
 
 import java.net.InetAddress;
 
