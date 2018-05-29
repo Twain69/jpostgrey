@@ -1,5 +1,6 @@
 package com.flegler.jpostgrey.interfaces;
 
+import com.flegler.jpostgrey.Settings;
 import com.flegler.jpostgrey.dataFetcher.FetcherResult;
 import com.flegler.jpostgrey.exception.InputRecordNotFoundException;
 import com.flegler.jpostgrey.model.InputRecord;
@@ -12,5 +13,5 @@ public interface DataFetcher {
         return result;
     }
 
-    void setUp();
+    void setUp(Settings settings);
 }

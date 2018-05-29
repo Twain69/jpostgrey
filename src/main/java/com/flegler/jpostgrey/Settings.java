@@ -31,8 +31,8 @@ public enum Settings {
             this.dataClass = (Class<DataFetcher>) Class.forName(config.dataClassName());
             Constructor<DataFetcher> constructor = dataClass.getConstructor();
             this.dataFetcherInstance = constructor.newInstance();
-            Method method = dataClass.getMethod("setUp");
-            method.invoke(this.dataFetcherInstance);
+            Method method = dataClass.getMethod("setUp", Settings.class);
+            method.invoke(this.dataFetcherInstance, this);
         } catch (ClassNotFoundException | IllegalAccessException | IllegalArgumentException | InvocationTargetException
                 | NoSuchMethodException | SecurityException | InstantiationException e) {
             if (getDataFetcherInstance() != null) {

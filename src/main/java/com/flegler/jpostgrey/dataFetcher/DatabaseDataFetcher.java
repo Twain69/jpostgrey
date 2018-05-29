@@ -125,10 +125,10 @@ public class DatabaseDataFetcher implements DataFetcher {
     }
 
     @Override
-    public void setUp() {
+    public void setUp(Settings settings) {
         LOG.info("Setting up databasefetcher");
-        if (!Settings.INSTANCE.getConfig().dataFetcherDBType().equals("postgresql")
-                && !Settings.INSTANCE.getConfig().dataFetcherDBType().equals("mysql")) {
+        if (!settings.getConfig().dataFetcherDBType().equals("postgresql")
+                && !settings.getConfig().dataFetcherDBType().equals("mysql")) {
             String errorMessage = "Wrong parameter provided for database type. "
                     + "Only 'postgresql' and 'mysql' is allowed.";
             LOG.error(errorMessage);
@@ -136,11 +136,11 @@ public class DatabaseDataFetcher implements DataFetcher {
             System.exit(1);
         }
 
-        type = Settings.INSTANCE.getConfig().dataFetcherDBType();
-        host = Settings.INSTANCE.getConfig().dataFetcherDBHost();
-        dbName = Settings.INSTANCE.getConfig().dataFetcherDBName();
-        user = Settings.INSTANCE.getConfig().dataFetcherDBUser();
-        password = Settings.INSTANCE.getConfig().dataFetcherDBPassword();
+        type = settings.getConfig().dataFetcherDBType();
+        host = settings.getConfig().dataFetcherDBHost();
+        dbName = settings.getConfig().dataFetcherDBName();
+        user = settings.getConfig().dataFetcherDBUser();
+        password = settings.getConfig().dataFetcherDBPassword();
 
         try {
             connection = connect();

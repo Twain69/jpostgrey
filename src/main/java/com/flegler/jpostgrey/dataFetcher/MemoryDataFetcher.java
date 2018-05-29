@@ -1,5 +1,6 @@
 package com.flegler.jpostgrey.dataFetcher;
 
+import com.flegler.jpostgrey.Settings;
 import com.flegler.jpostgrey.exception.InputRecordNotFoundException;
 import com.flegler.jpostgrey.interfaces.DataFetcher;
 import com.flegler.jpostgrey.model.InputRecord;
@@ -94,7 +95,7 @@ public class MemoryDataFetcher implements DataFetcher {
     }
 
     @Override
-    public void setUp() {
+    public void setUp(Settings settings) {
         LOG.info("Setting up memoryfetcher");
         // this is left empty intentionally, since it is not needed here
     }

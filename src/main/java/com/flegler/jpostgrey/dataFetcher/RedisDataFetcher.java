@@ -42,14 +42,14 @@ public class RedisDataFetcher implements DataFetcher {
     }
 
     @Override
-    public void setUp() {
-        if (StringUtils.isEmpty(Settings.INSTANCE.getConfig().redisHost())
-                || Settings.INSTANCE.getConfig().redisPort() == null
-                || Settings.INSTANCE.getConfig().redisPort() <= 0) {
+    public void setUp(Settings settings) {
+        if (StringUtils.isEmpty(settings.getConfig().redisHost())
+                || settings.getConfig().redisPort() == null
+                || settings.getConfig().redisPort() <= 0) {
             LOG.error("RedisFetcher not set up properly");
             System.exit(1);
         }
-        jedis = new Jedis(Settings.INSTANCE.getConfig().redisHost(), Settings.INSTANCE.getConfig().redisPort());
+        jedis = new Jedis(settings.getConfig().redisHost(), Settings.INSTANCE.getConfig().redisPort());
     }
 
     private Long getGreylistedData(InputRecord inputRecord)
