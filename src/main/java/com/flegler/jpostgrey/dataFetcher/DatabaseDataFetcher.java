@@ -36,6 +36,7 @@ public class DatabaseDataFetcher implements DataFetcher {
 	private String password;
 
 	public DatabaseDataFetcher() {
+		LOG.info("Instantiating new databasefetcher");
 	}
 
 	@Override
@@ -135,6 +136,7 @@ public class DatabaseDataFetcher implements DataFetcher {
 
 	@Override
 	public void setUp() {
+		LOG.info("Setting up databasefetcher");
 		if (!Settings.INSTANCE.getConfig().dataFetcherDBType().equals("postgresql")
 				&& !Settings.INSTANCE.getConfig().dataFetcherDBType().equals("mysql")) {
 			String errorMessage = "Wrong parameter provided for database type. "

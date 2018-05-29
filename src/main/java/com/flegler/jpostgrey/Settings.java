@@ -18,9 +18,7 @@ public enum Settings {
     private Logger LOG;
     private Class<DataFetcher> dataClass;
     private DataFetcher dataFetcherInstance;
-    private String pidFileName;
     private Conf config = ConfigFactory.create(Conf.class);
-    private WhiteListEntry addDelWhiteListEntry;
 
     Settings() {
         LOG = Logger.getLogger(Settings.class);
@@ -39,9 +37,9 @@ public enum Settings {
         } catch (ClassNotFoundException | IllegalAccessException | IllegalArgumentException | InvocationTargetException
                 | NoSuchMethodException | SecurityException | InstantiationException e) {
             if (getDataFetcherInstance() != null) {
-                LOG.error("Could not load data class. Ignoring configuration change!");
+                LOG.error("Could not load data class. Ignoring configuration change!", e);
             } else {
-                System.err.println("Could not load data class " + config.dataClassName());
+                LOG.error("Could not load data class " + config.dataClassName(), e);
                 System.exit(-1);
             }
         }

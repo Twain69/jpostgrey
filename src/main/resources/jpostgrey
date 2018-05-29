@@ -3,12 +3,11 @@
 source /etc/profile
 java=$(which java)
 JPOSTGREY_JAR=/opt/jpostgrey/jpostgrey.jar
-CONFIGFILE=/etc/jpostgrey/jpostgrey.conf
 
 LOGCONFIG=/etc/jpostgrey/logging.conf
 
 if [[ -f "$LOGCONFIG" ]]; then
-    $LOGOPTS="-Dlog4j.configuration=file:/etc/jpostgrey/logging.conf"
+    LOGOPTS="-Dlog4j.configuration=file:/etc/jpostgrey/logging.conf"
 fi
 
 $java $LOGOPTS -jar ${JPOSTGREY_JAR}
