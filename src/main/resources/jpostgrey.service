@@ -1,88 +1,10 @@
-#!/bin/sh
+[Unit]
+Description=jpostgrey
+After=syslog.target
 
-### BEGIN INIT INFO
-# Provides:       jpostgrey
-# Required-Start: $network $remote_fs
-# Required-Stop:
-# Default-Start:  3 5
-# Default-Stop:
-# Description:    Start the jPostgrey daemon
-### END INIT INFO
+[Service]
+User=root
+ExecStart=/opt/jpostgrey/jpostgrey
 
-# source function library
-. /etc/rc.d/init.d/functions
-
-prog=jpostgrey
-
-export PIDFILE_DIR=/var/run/jpostgrey
-export PIDFILE=$PIDFILE_DIR/jpostgrey.pid
-export CONFIGFILE=/etc/jpostgrey.conf
-
-OPTIONS="-r DAEMON"
-
-JPOSTGREY=/usr/bin/jpostgrey
-
-start()
-{
-        [ -x $JPOSTGREY ] || exit 5
-        [ -f $CONFIFILE ] || exit 6
-
-        echo -n $"Starting $prog: "
-        mkdir $PIDFILE_DIR
-        $JPOSTGREY $OPTIONS >/dev/null 2>/dev/null
-        pid=$(cat ${PIDFILE})
-        if [[ $(ps auxwww | grep ${pid} | grep -v grep | wc -l) > 0 ]]; then
-        	success
-        else
-        	failure
-        fi 
-        RETVAL=$?
-        echo
-        return $RETVAL
-}
-stop()
-{
-        echo -n $"Stopping $prog: "
-        kill $(cat ${PIDFILE})
-        RETVAL=$?
-        echo
-}
-restart() {
-        stop
-        sleep 1
-        start
-}
-rh_status() {
-        status -p $PIDFILE jpostgrey
-}
-rh_status_q() {
-        rh_status >/dev/null 2>&1
-}
-
-
-case "$1" in
-    start)
-		rh_status_q && exit 0
-		start
-		;;
-    stop)
-		if ! rh_status_q; then
-			rm -f $PIDFILE
-			exit 0
-		fi
-		stop
-		rm $PIDFILE
-		;;
-    restart)
-    	restart
-    	;;
-    status)
-		rh_status
-		RETVAL=$?
-		;;
-    *)
-        echo "Usage: $0 {start|stop|restart}"
-        RETVAL=2
-        ;;
-esac
-exit $RETVAL
+[Install]
+WantedBy=multi-user.target

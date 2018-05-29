@@ -2,11 +2,13 @@
 
 source /etc/profile
 java=$(which java)
-JPOSTGREY_JAR=/usr/share/jpostgrey/jpostgrey.jar
-PIDFILE_DIR=/var/run/jpostgrey
-PIDFILE=$PIDFILE_DIR/jpostgrey.pid
+JPOSTGREY_JAR=/opt/jpostgrey/jpostgrey.jar
 CONFIGFILE=/etc/jpostgrey/jpostgrey.conf
 
-mkdir -p $PIDFILE_DIR
+LOGCONFIG=/etc/jpostgrey/logging.conf
 
-$java -Dlog4j.configuration=file:/etc/jpostgrey/logging.conf -jar ${JPOSTGREY_JAR} -p ${PIDFILE} $* &
+if [[ -f "$LOGCONFIG" ]]; then
+    $LOGOPTS="-Dlog4j.configuration=file:/etc/jpostgrey/logging.conf"
+fi
+
+$java $LOGOPTS -jar ${JPOSTGREY_JAR}
