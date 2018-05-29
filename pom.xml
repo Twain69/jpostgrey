@@ -246,6 +246,10 @@
                                     <groupname>root</groupname>
                                 </mapping>
                             </mappings>
+                            <postinstallScriptlet>
+                                <scriptFile>src/main/resources/postinstall.sh</scriptFile>
+                                <fileEncoding>utf-8</fileEncoding>
+                            </postinstallScriptlet>
                         </configuration>
                     </plugin>
 
