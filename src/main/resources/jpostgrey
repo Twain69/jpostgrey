@@ -1,0 +1,12 @@
+#!/bin/bash
+
+source /etc/profile
+java=$(which java)
+JPOSTGREY_JAR=/usr/share/jpostgrey/jpostgrey.jar
+PIDFILE_DIR=/var/run/jpostgrey
+PIDFILE=$PIDFILE_DIR/jpostgrey.pid
+CONFIGFILE=/etc/jpostgrey/jpostgrey.conf
+
+mkdir -p $PIDFILE_DIR
+
+$java -Dlog4j.configuration=file:/etc/jpostgrey/logging.conf -jar ${JPOSTGREY_JAR} -p ${PIDFILE} $* &
