@@ -2,7 +2,6 @@ package com.flegler.jpostgrey;
 
 import com.flegler.jpostgrey.interfaces.Conf;
 import com.flegler.jpostgrey.interfaces.DataFetcher;
-import com.flegler.jpostgrey.model.WhiteListEntry;
 import lombok.Getter;
 import org.aeonbits.owner.ConfigFactory;
 import org.apache.log4j.Logger;
@@ -32,8 +31,8 @@ public enum Settings {
             this.dataClass = (Class<DataFetcher>) Class.forName(config.dataClassName());
             Constructor<DataFetcher> constructor = dataClass.getConstructor();
             this.dataFetcherInstance = constructor.newInstance();
-            Method method = dataClass.getMethod("setUp", Settings.class);
-            method.invoke(this.dataFetcherInstance, Settings.INSTANCE);
+            Method method = dataClass.getMethod("setUp");
+            method.invoke(this.dataFetcherInstance);
         } catch (ClassNotFoundException | IllegalAccessException | IllegalArgumentException | InvocationTargetException
                 | NoSuchMethodException | SecurityException | InstantiationException e) {
             if (getDataFetcherInstance() != null) {

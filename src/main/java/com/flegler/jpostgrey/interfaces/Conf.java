@@ -18,7 +18,7 @@ public interface Conf extends Mutable {
     String bindAddress();
 
     @Key("application.datafetcher.type")
-    @DefaultValue("com.flegler.jpostgrey.dataFetcher.MemoryDataFetcher")
+    @DefaultValue("com.flegler.jpostgrey.dataFetcher.DatabaseDataFetcher")
     String dataClassName();
 
     @Key("application.greylisting.time")

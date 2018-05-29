@@ -132,6 +132,7 @@
                             <mainClass>com.flegler.jpostgrey.JPostGrey</mainClass>
                         </manifest>
                     </archive>
+                    <!--<archiveClasses>true</archiveClasses>-->
                 </configuration>
             </plugin>
 
