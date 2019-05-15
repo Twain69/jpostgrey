@@ -40,9 +40,8 @@ public class DatabaseDataFetcher implements DataFetcher {
                 result.setFirstConnect(getGreylistedData(inputRecord));
                 return result;
             }
-        } catch (InputRecordNotFoundException | SQLException e) {
-            result.setFirstConnect(0L);
-            return result;
+        } catch (SQLException e) {
+            throw new InputRecordNotFoundException("Record not found");
         }
     }
 
