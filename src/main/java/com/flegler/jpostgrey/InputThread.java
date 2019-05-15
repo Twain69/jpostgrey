@@ -109,18 +109,17 @@ public class InputThread extends Thread {
 
             if (duration >= Settings.INSTANCE.getConfig().greylistingTime()) {
                 resultSB.append(PASS);
+                log(Priority.INFO_INT,
+                        String.format(
+                                "InputRecord found in backend. Duration since the first connect is '%d'. Current min duration: '%d'. Action: '%s'.",
+                                duration,
+                                Settings.INSTANCE.getConfig().greylistingTime(),
+                                resultSB.toString()));
             } else {
                 int remaining = Settings.INSTANCE.getConfig().greylistingTime()
                         - duration;
                 resultSB.append(String.format(DEFER_EARLY_RETRY, remaining));
             }
-            log(Priority.INFO_INT,
-                    String.format(
-                            "InputRecord found in backend. Duration since the first connect is '%d'. Current min duration: '%d'. Action: '%s'.",
-                            duration,
-                            Settings.INSTANCE.getConfig().greylistingTime(),
-                            resultSB.toString()));
-
         } catch (InputRecordNotFoundException e) {
             resultSB.append(DEFER);
             log(Priority.INFO_INT, "This is a new InputRecord");
