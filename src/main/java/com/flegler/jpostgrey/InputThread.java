@@ -118,6 +118,12 @@ public class InputThread extends Thread {
             } else {
                 int remaining = Settings.INSTANCE.getConfig().greylistingTime()
                         - duration;
+                log(Priority.INFO_INT,
+                        String.format(
+                                DEFER_EARLY_RETRY,
+                                remaining,
+                                Settings.INSTANCE.getConfig().greylistingTime(),
+                                resultSB.toString()));
                 resultSB.append(String.format(DEFER_EARLY_RETRY, remaining));
             }
         } catch (InputRecordNotFoundException e) {
