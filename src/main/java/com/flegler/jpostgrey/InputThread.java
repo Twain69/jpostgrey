@@ -14,7 +14,6 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.net.Socket;
-import java.util.Date;
 import java.util.UUID;
 
 public class InputThread extends Thread {
@@ -105,7 +104,7 @@ public class InputThread extends Thread {
             }
 
             int duration = new Long(
-                    ((new Date()).getTime() - result.getFirstConnect()) / 1000)
+                    ((System.currentTimeMillis() / 1000) - result.getFirstConnect() / 1000))
                     .intValue();
 
             if (duration >= Settings.INSTANCE.getConfig().greylistingTime()) {
